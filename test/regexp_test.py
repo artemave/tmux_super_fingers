@@ -80,24 +80,41 @@ def write_file(path, content):
     with open(path, 'w') as f:
         f.write(content)
 
+def assert_marks(pane, expected_marks):
+    marks = super_hints.get_pane_marks(pane)
+    assert len(marks) == 0
+
+    write_file('./app/controllers/orders_controller.rb', ORDERS_CONTROLLER)
+    marks = super_hints.get_pane_marks(pane)
+    assert marks == expected_marks
+
 @pytest.fixture(scope="function")
 def change_test_dir(tmpdir, request):
     os.chdir(tmpdir)
     yield(tmpdir)
     os.chdir(request.config.invocation_dir)
 
+def test_finds_relative_file(change_test_dir):
+    pane = {
+            'text': 'Stuff in ./app/controllers/orders_controller.rb',
+            'pane_current_path': os.getcwd()
+        }
+    expected_marks = [{
+        'start': 9,
+        'end': 47,
+        'mark_text': './app/controllers/orders_controller.rb',
+        'mark_data': {
+            'file_path': change_test_dir + '/app/controllers/orders_controller.rb',
+        }
+    }]
+    assert_marks(pane, expected_marks)
+
 def test_finds_rails_controller(change_test_dir):
     pane = {
             'text': 'Processing by OrdersController#show as HTML',
             'pane_current_path': os.getcwd()
         }
-
-    marks = super_hints.get_pane_marks(pane)
-    assert len(marks) == 0
-
-    write_file('./app/controllers/orders_controller.rb', ORDERS_CONTROLLER)
-    marks = super_hints.get_pane_marks(pane)
-    assert marks == [{
+    expected_marks = [{
         'start': 14,
         'end': 35,
         'mark_text': 'OrdersController#show',
@@ -106,3 +123,4 @@ def test_finds_rails_controller(change_test_dir):
             'line_number': 5
         }
     }]
+    assert_marks(pane, expected_marks)

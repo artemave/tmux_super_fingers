@@ -6,6 +6,7 @@ from pprint import pprint
 import os
 import re
 import subprocess
+from os.path import abspath
 
 PATTERN = re.compile(
         '(?P<rails_log_controller>(?:[A-Z]\\w*::)*[A-Z]\\w*Controller#\\w+)|'
@@ -61,7 +62,7 @@ def get_pane_marks(pane):
             file_path = parts[0]
 
             if file_path not in ('.', '..', '/'):
-                file_path = os.path.join(path_prefix, file_path)
+                file_path = abspath(os.path.join(path_prefix, file_path))
                 if os.path.exists(file_path):
                     mark_data = {'file_path': file_path}
                     if len(parts) > 1:

@@ -8,7 +8,7 @@ endf
 let g:vigun_mappings = [
       \ {
       \   'pattern': 'test/.*_test.py$',
-      \   'all': 'pytest -s #{file}',
+      \   'all': 'pytest -vv -s #{file}',
       \   'watch-all': s:watch('pytest -s #{file}'),
       \ }
       \]
