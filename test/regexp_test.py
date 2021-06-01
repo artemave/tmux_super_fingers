@@ -80,11 +80,11 @@ def write_file(path, content):
     with open(path, 'w') as f:
         f.write(content)
 
-def assert_marks(pane, expected_marks):
+def assert_marks(pane, expected_marks, file_path='./app/controllers/orders_controller.rb'):
     marks = super_hints.get_pane_marks(pane)
     assert len(marks) == 0
 
-    write_file('./app/controllers/orders_controller.rb', ORDERS_CONTROLLER)
+    write_file(file_path, ORDERS_CONTROLLER)
     marks = super_hints.get_pane_marks(pane)
     assert marks == expected_marks
 
@@ -104,7 +104,43 @@ def test_finds_relative_file(change_test_dir):
         'end': 47,
         'mark_text': './app/controllers/orders_controller.rb',
         'mark_data': {
-            'file_path': change_test_dir + '/app/controllers/orders_controller.rb',
+            'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
+        }
+    }]
+    assert_marks(pane, expected_marks)
+
+def test_finds_absolute_file(change_test_dir):
+    pane = {
+            'text': 'Stuff in ' + os.getcwd() + '/app/controllers/orders_controller.rb',
+            'pane_current_path': os.getcwd()
+        }
+    expected_marks = [{
+        'start': 9,
+        'end': 102,
+        'mark_text': os.getcwd() + '/app/controllers/orders_controller.rb',
+        'mark_data': {
+            'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
+        }
+    }]
+    assert_marks(pane, expected_marks)
+
+def test_finds_diff_path(change_test_dir):
+    text = """
+diff --git a/app/controllers/orders_controller.rb b/app/controllers/orders_controller.rb
+index c06609e..0f33345 100644
+--- a/app/controllers/orders_controller.rb
++++ b/app/controllers/orders_controller.rb
+    """
+    pane = {
+            'text': text,
+            'pane_current_path': os.getcwd()
+        }
+    expected_marks = [{
+        'start': 169,
+        'end': 205,
+        'mark_text': 'app/controllers/orders_controller.rb',
+        'mark_data': {
+            'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
         }
     }]
     assert_marks(pane, expected_marks)
@@ -124,3 +160,34 @@ def test_finds_rails_controller(change_test_dir):
         }
     }]
     assert_marks(pane, expected_marks)
+
+def test_finds_rails_partial(change_test_dir):
+    pane = {
+            'text': 'Rendered partials/_client_user_bar.html.erb (Duration: 22.6ms | Allocations: 5429)',
+            'pane_current_path': os.getcwd()
+        }
+    expected_marks = [{
+        'start': 9,
+        'end': 43,
+        'mark_text': 'partials/_client_user_bar.html.erb',
+        'mark_data': {
+            'file_path': change_test_dir + '/app/views/partials/_client_user_bar.html.erb'
+        }
+    }]
+    assert_marks(pane, expected_marks, './app/views/partials/_client_user_bar.html.erb')
+
+def test_finds_url():
+    pane = {
+            'text': 'Some url https://wfhftw.org yarp',
+            'pane_current_path': os.getcwd()
+        }
+    expected_marks = [{
+        'start': 9,
+        'end': 27,
+        'mark_text': 'https://wfhftw.org',
+        'mark_data': {
+            'url': 'https://wfhftw.org'
+        }
+    }]
+    marks = super_hints.get_pane_marks(pane)
+    assert marks == expected_marks
