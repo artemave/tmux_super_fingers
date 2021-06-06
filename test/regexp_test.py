@@ -109,9 +109,25 @@ def test_finds_relative_file(change_test_dir):
     }]
     assert_marks(pane, expected_marks)
 
+def test_finds_relative_file_with_line_number(change_test_dir):
+    pane = {
+            'text': 'Stuff in ./app/controllers/orders_controller.rb:32',
+            'pane_current_path': os.getcwd()
+        }
+    expected_marks = [{
+        'start': 9,
+        'end': 50,
+        'mark_text': './app/controllers/orders_controller.rb:32',
+        'mark_data': {
+            'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
+            'line_number': '32'
+        }
+    }]
+    assert_marks(pane, expected_marks)
+
 def test_finds_absolute_file(change_test_dir):
     pane = {
-            'text': 'Stuff in ' + os.getcwd() + '/app/controllers/orders_controller.rb',
+            'text': 'Stuff in ' + os.getcwd() + '/app/controllers/orders_controller.rb hello',
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{

@@ -26,7 +26,7 @@ def camel_to_snake(string):
 def get_pane_data(pane_props):
     pane_id, pane_current_path, pane_right, pane_left = pane_props.split(',')
     return {
-        'text': shell('tmux capture-pane -p -t ' + pane_id),
+        'text': shell('tmux capture-pane -p -J -t ' + pane_id),
         'pane_current_path': pane_current_path,
         'pane_right': pane_right,
         'pane_left': pane_left
