@@ -8,6 +8,8 @@ import re
 import subprocess
 from os.path import abspath
 # from concurrent import futures
+import curses
+from curses import wrapper
 
 PATTERN = re.compile(
     '(?P<rails_log_controller>(?:[A-Z]\\w*::)*[A-Z]\\w*Controller#\\w+)|'
@@ -32,16 +34,21 @@ def camel_to_snake(string):
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 def get_pane_data(pane_props):
-    pane_id, pane_current_path, pane_right, pane_left = pane_props.split(',')
+    pane_id, pane_current_path, pane_left, pane_right, pane_top, pane_bottom = pane_props.split(',')
     return {
-        'text': shell('tmux capture-pane -p -J -t ' + pane_id),
+        'unwrapped_text': shell('tmux capture-pane -p -J -t ' + pane_id),
+        'text': shell('tmux capture-pane -p -t ' + pane_id),
         'pane_current_path': pane_current_path,
-        'pane_right': pane_right,
-        'pane_left': pane_left
-        }
+        'pane_left': int(pane_left),
+        'pane_right': int(pane_right),
+        'pane_top': int(pane_top),
+        'pane_bottom': int(pane_bottom),
+    }
 
 def get_panes():
-    panes_props = shell('tmux list-panes -F #{pane_id},#{pane_current_path},#{pane_right},#{pane_left}').split('\n')
+    panes_props = shell(
+        'tmux list-panes -t ! -F #{pane_id},#{pane_current_path},#{pane_left},#{pane_right},#{pane_top},#{pane_bottom}'
+    ).split('\n')
     return map(get_pane_data, panes_props)
 
 def find_match(m, text, path_prefix):
@@ -117,16 +124,47 @@ def find_match(m, text, path_prefix):
 def get_pane_marks(pane):
     marks = []
     path_prefix = pane['pane_current_path']
-    text = pane['text']
+    text = pane['unwrapped_text']
 
     matches = re.finditer(PATTERN, text)
 
-    # Concurrent map is actually _slower_ than a regular map
+    # Concurrent map is actually _slower_ than a regular map.
+    #
     # with futures.ThreadPoolExecutor() as executor:
     #     marks = compact(executor.map(lambda m: find_match(m, text, path_prefix), matches))
 
     marks = compact(map(lambda m: find_match(m, text, path_prefix), matches))
-    return marks
+    pane['marks'] = marks
+
+    return pane
+
+def main(stdscr):
+    panes = map(get_pane_marks, get_panes())
+    # To inherit window background
+    curses.use_default_colors()
+    curses.curs_set(False)
+    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
+
+    for pane in panes:
+        if pane['pane_top'] > 0:
+            pane_width = pane['pane_right'] - pane['pane_left'] + 1
+            stdscr.addstr(pane['pane_top'] - 1, pane['pane_left'], '─' * pane_width)
+
+        if pane['pane_left'] > 0:
+            pane_height = pane['pane_bottom'] - pane['pane_top'] + 1
+            for ln in range(pane_height):
+                stdscr.addstr(pane['pane_top'] + ln, pane['pane_left'] - 1, '│')
+
+        for ln, line in enumerate(pane['text'].split('\n')):
+            stdscr.addstr(pane['pane_top'] + ln, pane['pane_left'], line)
+
+
+    # stdscr.addstr("Current mode: Typing mode\n", curses.A_BOLD)
+    # stdscr.addstr("Current mode: Typing mode\n", curses.color_pair(1))
+    # stdscr.addstr("Current mode: Typing mode\n", curses.color_pair(1) | curses.A_BOLD)
+    # stdscr.addstr("Current mode: Typing mode\n", curses.A_DIM)
+    stdscr.refresh()
+    stdscr.getkey()
 
 if __name__ == "__main__":
-    print(reduce(operator.add, map(get_pane_marks, get_panes())))
+    wrapper(main)

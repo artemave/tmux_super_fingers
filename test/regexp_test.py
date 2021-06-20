@@ -81,11 +81,11 @@ def write_file(path, content):
         f.write(content)
 
 def assert_marks(pane, expected_marks, file_path='./app/controllers/orders_controller.rb'):
-    marks = super_hints.get_pane_marks(pane)
+    marks = super_hints.get_pane_marks(pane)['marks']
     assert len(marks) == 0
 
     write_file(file_path, ORDERS_CONTROLLER)
-    marks = super_hints.get_pane_marks(pane)
+    marks = super_hints.get_pane_marks(pane)['marks']
     assert marks == expected_marks
 
 @pytest.fixture(scope="function")
@@ -96,7 +96,7 @@ def change_test_dir(tmpdir, request):
 
 def test_finds_relative_file(change_test_dir):
     pane = {
-            'text': 'Stuff in ./app/controllers/orders_controller.rb',
+            'unwrapped_text': 'Stuff in ./app/controllers/orders_controller.rb',
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
@@ -111,7 +111,7 @@ def test_finds_relative_file(change_test_dir):
 
 def test_finds_relative_file_with_line_number(change_test_dir):
     pane = {
-            'text': 'Stuff in ./app/controllers/orders_controller.rb:32',
+            'unwrapped_text': 'Stuff in ./app/controllers/orders_controller.rb:32',
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
@@ -127,7 +127,7 @@ def test_finds_relative_file_with_line_number(change_test_dir):
 
 def test_finds_absolute_file(change_test_dir):
     pane = {
-            'text': 'Stuff in ' + os.getcwd() + '/app/controllers/orders_controller.rb hello',
+            'unwrapped_text': 'Stuff in ' + os.getcwd() + '/app/controllers/orders_controller.rb hello',
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
@@ -148,7 +148,7 @@ index c06609e..0f33345 100644
 +++ b/app/controllers/orders_controller.rb
     """
     pane = {
-            'text': text,
+            'unwrapped_text': text,
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
@@ -163,7 +163,7 @@ index c06609e..0f33345 100644
 
 def test_finds_rails_controller(change_test_dir):
     pane = {
-            'text': 'Processing by OrdersController#show as HTML',
+            'unwrapped_text': 'Processing by OrdersController#show as HTML',
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
@@ -179,7 +179,7 @@ def test_finds_rails_controller(change_test_dir):
 
 def test_finds_rails_partial(change_test_dir):
     pane = {
-            'text': 'Rendered partials/_client_user_bar.html.erb (Duration: 22.6ms | Allocations: 5429)',
+            'unwrapped_text': 'Rendered partials/_client_user_bar.html.erb (Duration: 22.6ms | Allocations: 5429)',
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
@@ -194,7 +194,7 @@ def test_finds_rails_partial(change_test_dir):
 
 def test_finds_url():
     pane = {
-            'text': 'Some url https://wfhftw.org yarp',
+            'unwrapped_text': 'Some url https://wfhftw.org yarp',
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
@@ -205,5 +205,5 @@ def test_finds_url():
             'url': 'https://wfhftw.org'
         }
     }]
-    marks = super_hints.get_pane_marks(pane)
+    marks = super_hints.get_pane_marks(pane)['marks']
     assert marks == expected_marks
