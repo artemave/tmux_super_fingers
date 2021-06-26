@@ -82,7 +82,7 @@ def find_match(m, path_prefix):
                 os.path.expanduser(file_path)
             ))
 
-            if os.path.exists(file_path):
+            if os.path.isfile(file_path):
                 mark_data = {'file_path': file_path}
                 if len(parts) > 1:
                     mark_data['line_number'] = parts[1]
