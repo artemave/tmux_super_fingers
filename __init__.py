@@ -77,7 +77,11 @@ def find_match(m, path_prefix):
         file_path = parts[0]
 
         if file_path not in ('.', '..', '/'):
-            file_path = abspath(os.path.join(path_prefix, file_path))
+            file_path = abspath(os.path.join(
+                path_prefix,
+                os.path.expanduser(file_path)
+            ))
+
             if os.path.exists(file_path):
                 mark_data = {'file_path': file_path}
                 if len(parts) > 1:
@@ -165,6 +169,8 @@ def render_pane_text(stdscr, pane):
 
 def overlay_marks(stdscr, pane):
     running_total_of_chars = 0
+    wrapped_mark_tail = None
+
     for ln, line in enumerate(pane['text'].split('\n')):
         line_start = running_total_of_chars
         running_total_of_chars += len(line)
@@ -174,9 +180,30 @@ def overlay_marks(stdscr, pane):
             m for m in pane['marks'] if line_end > m['start'] >= line_start
         ]
 
-        for m in marks_that_start_on_current_line:
-            mark_start = m['start'] - line_start
-            stdscr.addstr(pane['pane_top'] + ln, mark_start, m['mark_text'], curses.A_BOLD)
+        if wrapped_mark_tail:
+            marks_that_start_on_current_line = [wrapped_mark_tail] + marks_that_start_on_current_line
+
+        for mark in marks_that_start_on_current_line:
+            mark_line_start = mark['start'] - line_start
+            mark_text = mark['mark_text']
+
+            if mark['end'] > line_end:
+                tail_length = mark['end'] - line_end
+                wrapped_mark_tail = {
+                    'mark_text': mark_text[-tail_length:],
+                    'start': line_end,
+                    'end': mark['end']
+                }
+                mark_text = mark_text[:-tail_length]
+            else:
+                wrapped_mark_tail = None
+
+            stdscr.addstr(
+                pane['pane_top'] + ln,
+                pane['pane_left'] + mark_line_start,
+                mark_text,
+                curses.A_BOLD
+            )
 
 def main(stdscr):
     panes = map(get_pane_marks, get_panes())
