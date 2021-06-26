@@ -95,13 +95,18 @@ def change_test_dir(tmpdir, request):
     os.chdir(request.config.invocation_dir)
 
 def test_finds_relative_file(change_test_dir):
+    text = """
+Banana man
+Stuff in ./app/controllers/orders_controller.rb rail
+Hello
+    """
     pane = {
-            'unwrapped_text': 'Stuff in ./app/controllers/orders_controller.rb',
+            'unwrapped_text': text,
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
-        'start': 9,
-        'end': 47,
+        'start': 19,
+        'end': 57,
         'mark_text': './app/controllers/orders_controller.rb',
         'mark_data': {
             'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
@@ -152,8 +157,8 @@ index c06609e..0f33345 100644
             'pane_current_path': os.getcwd()
         }
     expected_marks = [{
-        'start': 169,
-        'end': 205,
+        'start': 165,
+        'end': 201,
         'mark_text': 'app/controllers/orders_controller.rb',
         'mark_data': {
             'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',

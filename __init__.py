@@ -22,6 +22,11 @@ PATTERN = re.compile(
 def compact(l):
     return [e for e in l if e]
 
+def strip(text):
+    return '\n'.join(
+        map(lambda line: line.rstrip(), text.split('\n'))
+    )
+
 def shell(command):
     return subprocess.run(
         command.split(' '),
@@ -36,8 +41,8 @@ def camel_to_snake(string):
 def get_pane_data(pane_props):
     pane_id, pane_current_path, pane_left, pane_right, pane_top, pane_bottom = pane_props.split(',')
     return {
-        'unwrapped_text': shell('tmux capture-pane -p -J -t ' + pane_id),
-        'text': shell('tmux capture-pane -p -t ' + pane_id),
+        'unwrapped_text': strip(shell('tmux capture-pane -p -J -t ' + pane_id)),
+        'text': strip(shell('tmux capture-pane -p -t ' + pane_id)),
         'pane_current_path': pane_current_path,
         'pane_left': int(pane_left),
         'pane_right': int(pane_right),
@@ -51,9 +56,9 @@ def get_panes():
     ).split('\n')
     return map(get_pane_data, panes_props)
 
-def find_match(m, text, path_prefix):
+def find_match(m, path_prefix):
     start, end = m.span()
-    mark_text = text[start:end].replace('\n', '').replace('\0', '')
+    mark_text = m[0]
 
     path_match = m.groupdict()['path']
     diff_path_match = m.groupdict()['diff_path']
@@ -66,7 +71,7 @@ def find_match(m, text, path_prefix):
     if path_match or diff_path_match:
         if diff_path_match:
             start, end = m.span('diff_path')
-            mark_text = text[start:end].replace('\n', '').replace('\0', '')
+            mark_text = m.group('diff_path')
 
         parts = mark_text.rsplit(':', 1)
         file_path = parts[0]
@@ -80,7 +85,7 @@ def find_match(m, text, path_prefix):
 
     elif rails_partial_match:
         start, end = m.span('rails_log_partial')
-        mark_text = text[start:end].replace('\n', '').replace('\0', '')
+        mark_text = m.group('rails_log_partial')
         file_path = os.path.join(path_prefix, 'app/views/' + mark_text)
 
         if os.path.exists(file_path):
@@ -115,28 +120,63 @@ def find_match(m, text, path_prefix):
 
     if mark_data:
         return {
-            'start': start,
-            'end': end,
+            'start': int(start),
+            'end': int(end),
             'mark_text': mark_text,
             'mark_data': mark_data
         }
 
 def get_pane_marks(pane):
-    marks = []
+    pane['marks'] = []
     path_prefix = pane['pane_current_path']
-    text = pane['unwrapped_text']
+    unwrapped_text = pane['unwrapped_text']
+    running_total_of_chars = 0
 
-    matches = re.finditer(PATTERN, text)
+    for line in unwrapped_text.split('\n'):
+        matches = re.finditer(PATTERN, line)
+        marks = compact(map(lambda m: find_match(m, path_prefix), matches))
+        for mark in marks:
+            mark['start'] += running_total_of_chars
+            mark['end'] += running_total_of_chars
+
+        running_total_of_chars += len(line)
+        pane['marks'] += marks
 
     # Concurrent map is actually _slower_ than a regular map.
     #
     # with futures.ThreadPoolExecutor() as executor:
     #     marks = compact(executor.map(lambda m: find_match(m, text, path_prefix), matches))
 
-    marks = compact(map(lambda m: find_match(m, text, path_prefix), matches))
-    pane['marks'] = marks
 
     return pane
+
+def render_pane_text(stdscr, pane):
+    if pane['pane_top'] > 0:
+        pane_width = pane['pane_right'] - pane['pane_left'] + 1
+        stdscr.addstr(pane['pane_top'] - 1, pane['pane_left'], '─' * pane_width)
+
+    if pane['pane_left'] > 0:
+        pane_height = pane['pane_bottom'] - pane['pane_top'] + 1
+        for ln in range(pane_height):
+            stdscr.addstr(pane['pane_top'] + ln, pane['pane_left'] - 1, '│', curses.A_DIM)
+
+    for ln, line in enumerate(pane['text'].split('\n')):
+        stdscr.addstr(pane['pane_top'] + ln, pane['pane_left'], line, curses.A_DIM)
+
+def overlay_marks(stdscr, pane):
+    running_total_of_chars = 0
+    for ln, line in enumerate(pane['text'].split('\n')):
+        line_start = running_total_of_chars
+        running_total_of_chars += len(line)
+        line_end = running_total_of_chars
+
+        marks_that_start_on_current_line = [
+            m for m in pane['marks'] if line_end > m['start'] >= line_start
+        ]
+
+        for m in marks_that_start_on_current_line:
+            mark_start = m['start'] - line_start
+            stdscr.addstr(pane['pane_top'] + ln, mark_start, m['mark_text'], curses.A_BOLD)
 
 def main(stdscr):
     panes = map(get_pane_marks, get_panes())
@@ -146,18 +186,8 @@ def main(stdscr):
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
 
     for pane in panes:
-        if pane['pane_top'] > 0:
-            pane_width = pane['pane_right'] - pane['pane_left'] + 1
-            stdscr.addstr(pane['pane_top'] - 1, pane['pane_left'], '─' * pane_width)
-
-        if pane['pane_left'] > 0:
-            pane_height = pane['pane_bottom'] - pane['pane_top'] + 1
-            for ln in range(pane_height):
-                stdscr.addstr(pane['pane_top'] + ln, pane['pane_left'] - 1, '│')
-
-        for ln, line in enumerate(pane['text'].split('\n')):
-            stdscr.addstr(pane['pane_top'] + ln, pane['pane_left'], line)
-
+        render_pane_text(stdscr, pane)
+        overlay_marks(stdscr, pane)
 
     # stdscr.addstr("Current mode: Typing mode\n", curses.A_BOLD)
     # stdscr.addstr("Current mode: Typing mode\n", curses.color_pair(1))
