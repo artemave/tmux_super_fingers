@@ -151,8 +151,16 @@ def get_pane_marks(pane):
     # with futures.ThreadPoolExecutor() as executor:
     #     marks = compact(executor.map(lambda m: find_match(m, text, path_prefix), matches))
 
+    pane['marks'] = unique_marks(pane['marks'])
 
     return pane
+
+def unique_marks(marks):
+    index = {}
+    for mark in marks:
+        index[mark['mark_text']] = mark
+
+    return sorted(index.values(), key=lambda m: m['start'])
 
 def render_pane_text(stdscr, pane):
     if pane['pane_top'] > 0:
@@ -207,6 +215,7 @@ def overlay_marks(stdscr, pane):
 
 def main(stdscr):
     panes = map(get_pane_marks, get_panes())
+
     # To inherit window background
     curses.use_default_colors()
     curses.curs_set(False)

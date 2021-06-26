@@ -212,3 +212,19 @@ def test_finds_url():
     }]
     marks = super_hints.get_pane_marks(pane)['marks']
     assert marks == expected_marks
+
+def test_skips_duplicate_marks():
+    pane = {
+            'unwrapped_text': 'Some url https://wfhftw.org yarp hm https://wfhftw.org yarp',
+            'pane_current_path': os.getcwd()
+        }
+    expected_marks = [{
+        'start': 36,
+        'end': 54,
+        'mark_text': 'https://wfhftw.org',
+        'mark_data': {
+            'url': 'https://wfhftw.org'
+        }
+    }]
+    marks = super_hints.get_pane_marks(pane)['marks']
+    assert marks == expected_marks
