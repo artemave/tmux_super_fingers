@@ -213,8 +213,34 @@ def overlay_marks(stdscr, pane):
                 curses.A_BOLD
             )
 
+            if 'hint' in mark:
+                stdscr.addstr(
+                    pane['pane_top'] + ln,
+                    pane['pane_left'] + mark_line_start,
+                    mark['hint'],
+                    curses.color_pair(1) | curses.A_BOLD
+                )
+
+def assign_hints(panes):
+    mark_number = 0
+    for pane in reversed(panes):
+        for mark in reversed(pane['marks']):
+            mark['hint'] = number_to_hint(mark_number)
+            mark_number += 1
+
+def number_to_hint(number):
+    prefix = int(number / 26)
+    letter_number = number % 26
+    letter = chr(97 + letter_number)
+
+    if prefix > 0:
+        return f'{prefix}{letter}'
+
+    return letter
+
 def main(stdscr):
-    panes = map(get_pane_marks, get_panes())
+    panes = list(map(get_pane_marks, get_panes()))
+    assign_hints(panes)
 
     # To inherit window background
     curses.use_default_colors()
@@ -225,10 +251,6 @@ def main(stdscr):
         render_pane_text(stdscr, pane)
         overlay_marks(stdscr, pane)
 
-    # stdscr.addstr("Current mode: Typing mode\n", curses.A_BOLD)
-    # stdscr.addstr("Current mode: Typing mode\n", curses.color_pair(1))
-    # stdscr.addstr("Current mode: Typing mode\n", curses.color_pair(1) | curses.A_BOLD)
-    # stdscr.addstr("Current mode: Typing mode\n", curses.A_DIM)
     stdscr.refresh()
     stdscr.getkey()
 
