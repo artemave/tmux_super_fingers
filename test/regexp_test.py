@@ -131,13 +131,14 @@ def test_finds_relative_file_with_line_number(change_test_dir):
     assert_marks(pane, expected_marks)
 
 def test_finds_absolute_file(change_test_dir):
+    cwd = os.getcwd()
     pane = {
-            'unwrapped_text': 'Stuff in ' + os.getcwd() + '/app/controllers/orders_controller.rb hello',
-            'pane_current_path': os.getcwd()
+            'unwrapped_text': f'Stuff in {cwd}/app/controllers/orders_controller.rb hello',
+            'pane_current_path': cwd
         }
     expected_marks = [{
         'start': 9,
-        'end': 102,
+        'end': 9 + len(f'{cwd}/app/controllers/orders_controller.rb'),
         'mark_text': os.getcwd() + '/app/controllers/orders_controller.rb',
         'mark_data': {
             'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
