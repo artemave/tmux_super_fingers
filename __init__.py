@@ -45,20 +45,29 @@ def get_tmux_pane_cwd(pane_tty):
     return shell(f'readlink -e /proc/{pane_shell_pid}/cwd')
 
 def get_pane_data(pane_props):
-    pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom = pane_props.split(',')
+    pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom, scroll_position = pane_props.split(',')
+
+    vertical_offset = 0
+    if len(scroll_position) > 0:
+        vertical_offset = int(scroll_position)
+
+    pane_bottom = int(pane_bottom)
+    start = -vertical_offset
+    end = pane_bottom - vertical_offset
+
     return {
-        'unwrapped_text': strip(shell('tmux capture-pane -p -J -t ' + pane_id)),
-        'text': strip(shell('tmux capture-pane -p -t ' + pane_id)),
+        'unwrapped_text': strip(shell(f'tmux capture-pane -p -S {start} -E {end} -J -t {pane_id}')),
+        'text': strip(shell(f'tmux capture-pane -p -S {start} -E {end} -t {pane_id}')),
         'pane_current_path': get_tmux_pane_cwd(pane_tty),
         'pane_left': int(pane_left),
         'pane_right': int(pane_right),
         'pane_top': int(pane_top),
-        'pane_bottom': int(pane_bottom),
+        'pane_bottom': pane_bottom,
     }
 
 def get_panes():
     panes_props = shell(
-        'tmux list-panes -t ! -F #{pane_id},#{pane_tty},#{pane_left},#{pane_right},#{pane_top},#{pane_bottom}'
+        'tmux list-panes -t ! -F #{pane_id},#{pane_tty},#{pane_left},#{pane_right},#{pane_top},#{pane_bottom},#{scroll_position}'
     ).split('\n')
     return map(get_pane_data, panes_props)
 
