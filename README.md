@@ -16,6 +16,6 @@ Requires python3.
 
 Use [TPM](https://github.com/tmux-plugins/tpm):
 
-    set -g @plugin 'artemave/tmux-super-fingers'
+    set -g @plugin 'artemave/tmux_super_fingers'
     
 Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin.
