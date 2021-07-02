@@ -47,3 +47,7 @@ Customize how to enter fingers mode. Always preceded by prefix: `prefix + @super
 ```
 set -g @super-fingers-key f
 ```
+
+## TODO
+
+* generic, configurable/pluggable way to send highlited text to arbitrary target (not just `vim` and `xdg-open`)
