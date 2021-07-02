@@ -20,7 +20,7 @@ Super fingers extends on this idea. Notably:
 - it opens files in vim running elsewhere within the same tmux session*
 - it opens files at line number
 - only files paths that actually exist are highlighted
-- text that isn't a file path, but maps onto one (e.g. `UsersController#show` in rails log or `+++ b/app/models/user.rb`) is also highlighted
+- text that isn't a file path, but maps onto one (e.g. `UsersController#show` in rails log or `+++ b/app/models/user.rb` in a diff) is also highlighted
 
 \* _if no running (n)vim is found in the session, plugin attempts to start nvim in a new window and, failing that, attempts to start vim._
 
