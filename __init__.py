@@ -180,15 +180,25 @@ def unique_marks(marks):
 def render_pane_text(stdscr, pane):
     if pane['pane_top'] > 0:
         pane_width = pane['pane_right'] - pane['pane_left'] + 1
-        stdscr.addstr(pane['pane_top'] - 1, pane['pane_left'], '─' * pane_width)
+        render_line(stdscr, pane['pane_top'] - 1, pane['pane_left'], '─' * pane_width)
 
     if pane['pane_left'] > 0:
         pane_height = pane['pane_bottom'] - pane['pane_top'] + 1
         for ln in range(pane_height):
-            stdscr.addstr(pane['pane_top'] + ln, pane['pane_left'] - 1, '│', curses.A_DIM)
+            render_line(stdscr, pane['pane_top'] + ln, pane['pane_left'] - 1, '│', curses.A_DIM)
 
-    for ln, line in enumerate(pane['text'].split('\n')):
-        stdscr.addstr(pane['pane_top'] + ln, pane['pane_left'], line, curses.A_DIM)
+    lines = pane['text'].split('\n')
+    for ln, line in enumerate(lines):
+        render_line(stdscr, pane['pane_top'] + ln, pane['pane_left'], line, curses.A_DIM)
+
+# Workaround for:
+# https://stackoverflow.com/questions/7063128/last-character-of-a-window-in-python-curses
+def render_line(stdscr, y, x, line, color):
+    try:
+        stdscr.addstr(y, x, line, color)
+    except:
+        stdscr.addstr(y, x, line[-1], color)
+        stdscr.insstr(y, x, line[:-1], color)
 
 def overlay_marks(stdscr, pane):
     running_total_of_chars = 0
@@ -221,7 +231,8 @@ def overlay_marks(stdscr, pane):
             else:
                 wrapped_mark_tail = None
 
-            stdscr.addstr(
+            render_line(
+                stdscr,
                 pane['pane_top'] + ln,
                 pane['pane_left'] + mark_line_start,
                 mark_text,
@@ -229,7 +240,8 @@ def overlay_marks(stdscr, pane):
             )
 
             if 'hint' in mark:
-                stdscr.addstr(
+                render_line(
+                    stdscr,
                     pane['pane_top'] + ln,
                     pane['pane_left'] + mark_line_start,
                     mark['hint'],
