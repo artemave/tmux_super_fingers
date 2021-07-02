@@ -1,6 +1,6 @@
 # super fingers
 
-Open files without having to manually copy/paste paths.
+Opens file links in vim, urls in the browser. And more.
 
 <details>
   <summary>See it in action</summary>
