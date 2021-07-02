@@ -1,6 +1,6 @@
 # super fingers
 
-Opens file links in vim, urls in the browser. And more.
+A tmux "mode" that allows you to open file links in vim, urls in the browser.
 
 <details>
   <summary>See it in action</summary>
@@ -11,11 +11,16 @@ Opens file links in vim, urls in the browser. And more.
 
 <img src="https://i.imgur.com/y2wd9rK.gif" />
 
-The idea is similar to tmux [fingers](https://github.com/morantron/tmux-fingers) plugin, with few improvements:
+## Description
 
-- actually opens files in vim running elsewhere in the same tmux session
-- open files at line number
-- only existing files paths are highlighted
+Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) get highlighted and assigned a "mark". When user hits a key corresponding to the mark, the highlighted text gets copied into clipboard.
+
+Super fingers extends on this idea. Notably:
+
+- it opens files in vim running elsewhere within the same tmux session
+- it opens files at line number
+- only files paths that actually exist are highlighted
+- text that isn't a file path, but maps onto one (e.g. `UsersController#show` in rails log or `+++ b/app/models/user.rb`) is also highlighted
 
 ## Install
 
