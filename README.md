@@ -1,13 +1,11 @@
-
-
-https://user-images.githubusercontent.com/23721/124262753-b2d3ba00-db32-11eb-83ee-77c65dd00d39.mp4
-
-
-
-https://user-images.githubusercontent.com/23721/124262359-38a33580-db32-11eb-8fbd-95a6ad5eec28.mp4
-
-
 # super fingers
+
+<details>
+  <summary>See it in action</summary>
+    
+  https://user-images.githubusercontent.com/23721/124262753-b2d3ba00-db32-11eb-83ee-77c65dd00d39.mp4
+    
+</details>
 
 <img src="https://i.imgur.com/y2wd9rK.gif" />
 
