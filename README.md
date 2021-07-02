@@ -22,7 +22,7 @@ Super fingers extends on this idea. Notably:
 - only files paths that actually exist are highlighted
 - text that isn't a file path, but maps onto one (e.g. `UsersController#show` in rails log or `+++ b/app/models/user.rb`) is also highlighted
 
-\* _By default, if no running (n)vim is found in the session, plugin attempts to start nvim in a new window and, failing that, attempts to start vim._
+\* _if no running (n)vim is found in the session, plugin attempts to start nvim in a new window and, failing that, attempts to start vim._
 
 ### Secondary action
 
