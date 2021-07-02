@@ -13,7 +13,7 @@ A tmux "mode" that allows you to open file links in vim, urls in the browser.
 
 ## Description
 
-Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) get highlighted and assigned a "mark". When user hits a key corresponding to the mark, the highlighted text gets copied into clipboard.
+Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) are highlighted and assigned a "mark". When user hits a key corresponding to the mark, the highlighted text gets copied into clipboard.
 
 Super fingers extends on this idea. Notably:
 
