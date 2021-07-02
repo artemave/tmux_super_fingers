@@ -1,5 +1,7 @@
 # super fingers
 
+Open files without having to manually copy/paste paths.
+
 <details>
   <summary>See it in action</summary>
     
@@ -9,11 +11,10 @@
 
 <img src="https://i.imgur.com/y2wd9rK.gif" />
 
-Open files/urls without having to manually copy paths/urls.
-
 The idea is similar to tmux [fingers](https://github.com/morantron/tmux-fingers) plugin, with few improvements:
 
 - actually opens files in vim running elsewhere in the same tmux session
+- open files at line number
 - only existing files paths are highlighted
 
 ## Install
