@@ -149,16 +149,16 @@ def get_pane_marks(pane):
     pane['marks'] = []
     path_prefix = pane['pane_current_path']
     unwrapped_text = pane['unwrapped_text']
-    running_total_of_chars = 0
+    running_character_total = 0
 
     for line in unwrapped_text.split('\n'):
         matches = re.finditer(PATTERN, line)
         marks = compact(map(lambda m: find_match(m, path_prefix), matches))
         for mark in marks:
-            mark['start'] += running_total_of_chars
-            mark['end'] += running_total_of_chars
+            mark['start'] += running_character_total
+            mark['end'] += running_character_total
 
-        running_total_of_chars += len(line)
+        running_character_total += len(line)
         pane['marks'] += marks
 
     # Concurrent map is actually _slower_ than a regular map.
@@ -201,13 +201,13 @@ def render_line(stdscr, y, x, line, color):
         stdscr.insstr(y, x, line[:-1], color)
 
 def overlay_marks(stdscr, pane):
-    running_total_of_chars = 0
+    running_character_total = 0
     wrapped_mark_tail = None
 
     for ln, line in enumerate(pane['text'].split('\n')):
-        line_start = running_total_of_chars
-        running_total_of_chars += len(line)
-        line_end = running_total_of_chars
+        line_start = running_character_total
+        running_character_total += len(line)
+        line_end = running_character_total
 
         marks_that_start_on_current_line = [
             m for m in pane['marks'] if line_end > m['start'] >= line_start
