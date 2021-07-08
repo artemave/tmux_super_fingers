@@ -1,4 +1,4 @@
-# super fingers
+# Tmux Super Fingers
 
 A tmux "mode" that allows you to open file links in vim, urls in the browser.
 
