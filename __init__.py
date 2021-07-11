@@ -12,6 +12,7 @@ from os.path import abspath
 import curses
 from curses import wrapper
 from curses import ascii
+from typing import Dict, Any
 
 PATTERN = re.compile(
     '(?P<rails_log_controller>(?:[A-Z]\\w*::)*[A-Z]\\w*Controller#\\w+)|'
@@ -127,7 +128,7 @@ def find_match(m, path_prefix):
         method_def_regex = re.compile('^\\s*def\\s+%s' % (action))
 
         if os.path.exists(controller_path):
-            mark_data = {'file_path': controller_path}
+            mark_data: Dict[str, Any] = {'file_path': controller_path}
 
             with open(controller_path) as ruby_file:
                 line_number = 0
@@ -180,7 +181,7 @@ def unique_marks(marks):
 def render_pane_text(stdscr, pane):
     if pane['pane_top'] > 0:
         pane_width = pane['pane_right'] - pane['pane_left'] + 1
-        render_line(stdscr, pane['pane_top'] - 1, pane['pane_left'], '─' * pane_width)
+        render_line(stdscr, pane['pane_top'] - 1, pane['pane_left'], '─' * pane_width, curses.A_DIM)
 
     if pane['pane_left'] > 0:
         pane_height = pane['pane_bottom'] - pane['pane_top'] + 1
@@ -196,7 +197,7 @@ def render_pane_text(stdscr, pane):
 def render_line(stdscr, y, x, line, color):
     try:
         stdscr.addstr(y, x, line, color)
-    except:
+    except curses.error:
         stdscr.addstr(y, x, line[-1], color)
         stdscr.insstr(y, x, line[:-1], color)
 
