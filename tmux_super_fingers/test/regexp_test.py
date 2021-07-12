@@ -1,7 +1,7 @@
 import pytest
 import os
 from pprint import pprint
-import super_hints
+from ..find_marks import get_pane_marks
 
 TEXT = """
 Rendered layouts/_base.html.erb (Duration: 32.9ms | Allocations: 2204)
@@ -81,11 +81,11 @@ def write_file(path, content):
         f.write(content)
 
 def assert_marks(pane, expected_marks, file_path='./app/controllers/orders_controller.rb'):
-    marks = super_hints.get_pane_marks(pane)['marks']
+    marks = get_pane_marks(pane)['marks']
     assert len(marks) == 0
 
     write_file(file_path, ORDERS_CONTROLLER)
-    marks = super_hints.get_pane_marks(pane)['marks']
+    marks = get_pane_marks(pane)['marks']
     assert marks == expected_marks
 
 @pytest.fixture(scope="function")
@@ -211,7 +211,7 @@ def test_finds_url():
             'url': 'https://wfhftw.org'
         }
     }]
-    marks = super_hints.get_pane_marks(pane)['marks']
+    marks = get_pane_marks(pane)['marks']
     assert marks == expected_marks
 
 def test_skips_duplicate_marks():
@@ -227,5 +227,5 @@ def test_skips_duplicate_marks():
             'url': 'https://wfhftw.org'
         }
     }]
-    marks = super_hints.get_pane_marks(pane)['marks']
+    marks = get_pane_marks(pane)['marks']
     assert marks == expected_marks
