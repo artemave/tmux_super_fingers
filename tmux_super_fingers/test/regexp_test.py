@@ -1,7 +1,9 @@
 import pytest
+from typing import Dict, Any
 import os
 from pprint import pprint
-from ..find_marks import get_pane_marks
+from ..pane import Pane
+from ..mark import Mark, UrlTarget, TextFileTarget
 
 TEXT = """
 Rendered layouts/_base.html.erb (Duration: 32.9ms | Allocations: 2204)
@@ -80,13 +82,25 @@ def write_file(path, content):
     with open(path, 'w') as f:
         f.write(content)
 
-def assert_marks(pane, expected_marks, file_path='./app/controllers/orders_controller.rb'):
-    marks = get_pane_marks(pane)['marks']
-    assert len(marks) == 0
+def create_pane(pane_obj) -> Pane:
+    pane: Dict[str, Any] = {
+        'text': 'some text',
+        'pane_current_path': os.getcwd(),
+        'pane_left': 0,
+        'pane_right': 0,
+        'pane_top': 0,
+        'pane_bottom': 0
+    }
+    pane.update(pane_obj)
+    return Pane(**pane)
+
+def assert_marks(pane_obj, expected_marks, file_path='./app/controllers/orders_controller.rb'):
+    pane = create_pane(pane_obj)
+    assert len(pane.marks) == 0
 
     write_file(file_path, ORDERS_CONTROLLER)
-    marks = get_pane_marks(pane)['marks']
-    assert marks == expected_marks
+    pane = create_pane(pane_obj)
+    assert pane.marks == expected_marks
 
 @pytest.fixture(scope="function")
 def change_test_dir(tmpdir, request):
@@ -101,49 +115,55 @@ Stuff in ./app/controllers/orders_controller.rb rail
 Hello
     """
     pane = {
-            'unwrapped_text': text,
-            'pane_current_path': os.getcwd()
-        }
-    expected_marks = [{
-        'start': 19,
-        'end': 57,
-        'mark_text': './app/controllers/orders_controller.rb',
-        'mark_data': {
-            'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
-        }
-    }]
+        'unwrapped_text': text,
+        'pane_current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=19,
+            end=57,
+            mark_text='./app/controllers/orders_controller.rb',
+            target=TextFileTarget(
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+            )
+        )
+    ]
     assert_marks(pane, expected_marks)
 
 def test_finds_relative_file_with_line_number(change_test_dir):
     pane = {
-            'unwrapped_text': 'Stuff in ./app/controllers/orders_controller.rb:32',
-            'pane_current_path': os.getcwd()
-        }
-    expected_marks = [{
-        'start': 9,
-        'end': 50,
-        'mark_text': './app/controllers/orders_controller.rb:32',
-        'mark_data': {
-            'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
-            'line_number': '32'
-        }
-    }]
+        'unwrapped_text': 'Stuff in ./app/controllers/orders_controller.rb:32',
+        'pane_current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=9,
+            end=50,
+            mark_text='./app/controllers/orders_controller.rb:32',
+            target=TextFileTarget(
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                line_number=32
+            )
+        )
+    ]
     assert_marks(pane, expected_marks)
 
 def test_finds_absolute_file(change_test_dir):
     cwd = os.getcwd()
     pane = {
-            'unwrapped_text': f'Stuff in {cwd}/app/controllers/orders_controller.rb hello',
-            'pane_current_path': cwd
-        }
-    expected_marks = [{
-        'start': 9,
-        'end': 9 + len(f'{cwd}/app/controllers/orders_controller.rb'),
-        'mark_text': os.getcwd() + '/app/controllers/orders_controller.rb',
-        'mark_data': {
-            'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
-        }
-    }]
+        'unwrapped_text': f'Stuff in {cwd}/app/controllers/orders_controller.rb hello',
+        'pane_current_path': cwd
+    }
+    expected_marks = [
+        Mark(
+            start=9,
+            end=9 + len(f'{cwd}/app/controllers/orders_controller.rb'),
+            mark_text=os.getcwd() + '/app/controllers/orders_controller.rb',
+            target=TextFileTarget(
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb'
+            )
+        )
+    ]
     assert_marks(pane, expected_marks)
 
 def test_finds_diff_path(change_test_dir):
@@ -154,78 +174,84 @@ index c06609e..0f33345 100644
 +++ b/app/controllers/orders_controller.rb
     """
     pane = {
-            'unwrapped_text': text,
-            'pane_current_path': os.getcwd()
-        }
-    expected_marks = [{
-        'start': 165,
-        'end': 201,
-        'mark_text': 'app/controllers/orders_controller.rb',
-        'mark_data': {
-            'file_path': os.getcwd() + '/app/controllers/orders_controller.rb',
-        }
-    }]
+        'unwrapped_text': text,
+        'pane_current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=165,
+            end=201,
+            mark_text='app/controllers/orders_controller.rb',
+            target=TextFileTarget(
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb'
+            )
+        )
+    ]
     assert_marks(pane, expected_marks)
 
 def test_finds_rails_controller(change_test_dir):
     pane = {
-            'unwrapped_text': 'Processing by OrdersController#show as HTML',
-            'pane_current_path': os.getcwd()
-        }
-    expected_marks = [{
-        'start': 14,
-        'end': 35,
-        'mark_text': 'OrdersController#show',
-        'mark_data': {
-            'file_path': change_test_dir + '/app/controllers/orders_controller.rb',
-            'line_number': 5
-        }
-    }]
+        'unwrapped_text': 'Processing by OrdersController#show as HTML',
+        'pane_current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=14,
+            end=35,
+            mark_text='OrdersController#show',
+            target=TextFileTarget(
+                file_path=change_test_dir + '/app/controllers/orders_controller.rb',
+                line_number=5
+            )
+        )
+    ]
     assert_marks(pane, expected_marks)
 
 def test_finds_rails_partial(change_test_dir):
     pane = {
-            'unwrapped_text': 'Rendered partials/_client_user_bar.html.erb (Duration: 22.6ms | Allocations: 5429)',
-            'pane_current_path': os.getcwd()
-        }
-    expected_marks = [{
-        'start': 9,
-        'end': 43,
-        'mark_text': 'partials/_client_user_bar.html.erb',
-        'mark_data': {
-            'file_path': change_test_dir + '/app/views/partials/_client_user_bar.html.erb'
-        }
-    }]
+        'unwrapped_text': 'Rendered partials/_client_user_bar.html.erb (Duration: 22.6ms | Allocations: 5429)',
+        'pane_current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=9,
+            end=43,
+            mark_text='partials/_client_user_bar.html.erb',
+            target=TextFileTarget(
+                file_path=change_test_dir + '/app/views/partials/_client_user_bar.html.erb'
+            )
+        )
+    ]
     assert_marks(pane, expected_marks, './app/views/partials/_client_user_bar.html.erb')
 
 def test_finds_url():
-    pane = {
-            'unwrapped_text': 'Some url https://wfhftw.org yarp',
-            'pane_current_path': os.getcwd()
-        }
-    expected_marks = [{
-        'start': 9,
-        'end': 27,
-        'mark_text': 'https://wfhftw.org',
-        'mark_data': {
-            'url': 'https://wfhftw.org'
-        }
-    }]
-    marks = get_pane_marks(pane)['marks']
-    assert marks == expected_marks
+    pane = create_pane({
+        'unwrapped_text': 'Some url https://wfhftw.org yarp',
+    })
+    expected_marks = [
+        Mark(
+            start=9,
+            end=27,
+            mark_text='https://wfhftw.org',
+            target=UrlTarget(
+                url='https://wfhftw.org'
+            )
+        )
+    ]
+    assert pane.marks == expected_marks
 
 def test_skips_duplicate_marks():
-    pane = {
-            'unwrapped_text': 'Some url https://wfhftw.org yarp hm https://wfhftw.org yarp',
-            'pane_current_path': os.getcwd()
-        }
-    expected_marks = [{
-        'start': 36,
-        'end': 54,
-        'mark_text': 'https://wfhftw.org',
-        'mark_data': {
-            'url': 'https://wfhftw.org'
-        }
-    }]
-    marks = get_pane_marks(pane)['marks']
-    assert marks == expected_marks
+    pane = create_pane({
+        'unwrapped_text': 'Some url https://wfhftw.org yarp hm https://wfhftw.org yarp',
+    })
+    expected_marks = [
+        Mark(
+            start=36,
+            end=54,
+            mark_text='https://wfhftw.org',
+            target=UrlTarget(
+                url='https://wfhftw.org'
+            )
+        )
+    ]
+    assert pane.marks == expected_marks

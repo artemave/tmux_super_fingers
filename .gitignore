@@ -2,3 +2,4 @@
 __pycache__/
 test/__pycache__/
 __init__.spec
+node_modules
