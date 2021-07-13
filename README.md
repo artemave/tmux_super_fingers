@@ -3,7 +3,7 @@
 A tmux "mode" that allows you to open file links in vim, urls in the browser.
 
 <details>
-  <summary>See it in action</summary>
+  <summary>Demo</summary>
     
   https://user-images.githubusercontent.com/23721/124262753-b2d3ba00-db32-11eb-83ee-77c65dd00d39.mp4
     
