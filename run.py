@@ -9,6 +9,7 @@ from curses import ascii
 from typing import List, Any
 from tmux_super_fingers.pane import Pane
 from tmux_super_fingers.mark import Mark, UrlTarget, TextFileTarget
+from tmux_super_fingers.utils import flatten
 
 def shell(command):
     return subprocess.run(
@@ -128,9 +129,6 @@ def number_to_hint(number):
         return f'{prefix}{letter}'
 
     return letter
-
-def flatten(list: List[List[Any]]) -> List[Any]:
-    return sum(list, [])
 
 is_macos: bool = 'darwin' in sys.platform.lower()
 
