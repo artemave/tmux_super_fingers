@@ -121,7 +121,7 @@ Hello
     expected_marks = [
         Mark(
             start=19,
-            mark_text='./app/controllers/orders_controller.rb',
+            text='./app/controllers/orders_controller.rb',
             target=TextFileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
             )
@@ -137,7 +137,7 @@ def test_finds_relative_file_with_line_number(change_test_dir):
     expected_marks = [
         Mark(
             start=9,
-            mark_text='./app/controllers/orders_controller.rb:32',
+            text='./app/controllers/orders_controller.rb:32',
             target=TextFileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
                 line_number=32
@@ -155,7 +155,7 @@ def test_finds_absolute_file(change_test_dir):
     expected_marks = [
         Mark(
             start=9,
-            mark_text=os.getcwd() + '/app/controllers/orders_controller.rb',
+            text=os.getcwd() + '/app/controllers/orders_controller.rb',
             target=TextFileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb'
             )
@@ -177,7 +177,7 @@ index c06609e..0f33345 100644
     expected_marks = [
         Mark(
             start=165,
-            mark_text='app/controllers/orders_controller.rb',
+            text='app/controllers/orders_controller.rb',
             target=TextFileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb'
             )
@@ -193,7 +193,7 @@ def test_finds_rails_controller(change_test_dir):
     expected_marks = [
         Mark(
             start=14,
-            mark_text='OrdersController#show',
+            text='OrdersController#show',
             target=TextFileTarget(
                 file_path=change_test_dir + '/app/controllers/orders_controller.rb',
                 line_number=5
@@ -210,7 +210,7 @@ def test_finds_rails_partial(change_test_dir):
     expected_marks = [
         Mark(
             start=9,
-            mark_text='partials/_client_user_bar.html.erb',
+            text='partials/_client_user_bar.html.erb',
             target=TextFileTarget(
                 file_path=change_test_dir + '/app/views/partials/_client_user_bar.html.erb'
             )
@@ -225,7 +225,7 @@ def test_finds_url():
     expected_marks = [
         Mark(
             start=9,
-            mark_text='https://wfhftw.org',
+            text='https://wfhftw.org',
             target=UrlTarget(
                 url='https://wfhftw.org'
             )
@@ -240,7 +240,7 @@ def test_skips_duplicate_marks():
     expected_marks = [
         Mark(
             start=36,
-            mark_text='https://wfhftw.org',
+            text='https://wfhftw.org',
             target=UrlTarget(
                 url='https://wfhftw.org'
             )

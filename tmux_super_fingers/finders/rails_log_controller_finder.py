@@ -17,9 +17,9 @@ class RailsLogControllerFinder(BaseFinder):
 
     def match_to_mark(self, match: Match) -> Optional[Mark]:
         start, end = match.span()
-        mark_text = match.group(0)
+        text = match.group(0)
 
-        controller_class, action = mark_text.split('#')
+        controller_class, action = text.split('#')
         controller_path = 'app/controllers/' + '/'.join(
             map(camel_to_snake, controller_class.split('::'))
         ) + '.rb'
@@ -40,7 +40,7 @@ class RailsLogControllerFinder(BaseFinder):
 
             return Mark(
                 start=start,
-                mark_text=mark_text,
+                text=text,
                 target=mark_target
             )
 

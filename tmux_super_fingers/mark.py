@@ -16,10 +16,10 @@ class TextFileTarget(MarkTarget):
 @dataclass
 class Mark:
     start: int
-    mark_text: str
+    text: str
     target: Optional[MarkTarget] = None
     hint: Optional[str] = None
 
     @property
     def end(self) -> int:
-        return self.start + len(self.mark_text)
+        return self.start + len(self.text)

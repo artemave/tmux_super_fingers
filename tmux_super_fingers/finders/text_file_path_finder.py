@@ -15,7 +15,7 @@ class TextFilePathFinder(BaseFinder):
 
     def match_to_mark(self, match: Match) -> Optional[Mark]:
         start, end = match.span()
-        mark_text = match.group(0)
+        text = match.group(0)
         file_path = match.group(1)
         line_number = match.group(2)
 
@@ -32,7 +32,7 @@ class TextFilePathFinder(BaseFinder):
 
                 return Mark(
                     start=start,
-                    mark_text=mark_text,
+                    text=text,
                     target=mark_target
                 )
 

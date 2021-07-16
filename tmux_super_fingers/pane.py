@@ -41,6 +41,6 @@ class Pane:
 def _unique_sorted_marks(marks: List[Mark]) -> List[Mark]:
     index = {}
     for mark in marks:
-        index[mark.mark_text] = mark
+        index[mark.text] = mark
 
     return sorted(index.values(), key=lambda m: m.start)

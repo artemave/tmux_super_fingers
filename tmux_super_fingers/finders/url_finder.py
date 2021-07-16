@@ -14,10 +14,10 @@ class UrlFinder(BaseFinder):
 
     def match_to_mark(self, match: Match) -> Optional[Mark]:
         start, end = match.span()
-        mark_text = match.group(0)
+        text = match.group(0)
 
         return Mark(
             start=start,
-            mark_text=mark_text,
-            target=UrlTarget(mark_text.replace('tcp', 'http'))
+            text=text,
+            target=UrlTarget(text.replace('tcp', 'http'))
         )

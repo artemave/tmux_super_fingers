@@ -19,7 +19,7 @@ class DiffFilePathFinder(BaseFinder):
 
     def match_to_mark(self, match: Match) -> Optional[Mark]:
         start, end = match.span(1)
-        mark_text = match.group(1)
+        text = match.group(1)
         file_path = match.group(2)
         line_number = match.group(3)
 
@@ -36,7 +36,7 @@ class DiffFilePathFinder(BaseFinder):
 
                 return Mark(
                     start=start,
-                    mark_text=mark_text,
+                    text=text,
                     target=mark_target
                 )
 

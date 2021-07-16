@@ -77,15 +77,15 @@ def overlay_marks(stdscr, pane: Pane):
 
         for mark in marks_that_start_on_current_line:
             mark_line_start = mark.start - line_start
-            mark_text = mark.mark_text
+            text = mark.text
 
             if mark.end > line_end:
                 tail_length = mark.end - line_end
                 wrapped_mark_tail = Mark(
-                    mark_text=mark_text[-tail_length:],
+                    text=text[-tail_length:],
                     start=line_end,
                 )
-                mark_text = mark_text[:-tail_length]
+                text = text[:-tail_length]
             else:
                 wrapped_mark_tail = None
 
@@ -93,7 +93,7 @@ def overlay_marks(stdscr, pane: Pane):
                 stdscr,
                 pane.pane_top + ln,
                 pane.pane_left + mark_line_start,
-                mark_text,
+                text,
                 curses.A_BOLD
             )
 

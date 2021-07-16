@@ -21,13 +21,13 @@ class RailsLogPartialFinder(BaseFinder):
 
     def match_to_mark(self, match: Match) -> Optional[Mark]:
         start, end = match.span(1)
-        mark_text = match.group(1)
-        file_path = os.path.join(self.path_prefix, 'app/views/' + mark_text)
+        text = match.group(1)
+        file_path = os.path.join(self.path_prefix, 'app/views/' + text)
 
         if os.path.exists(file_path):
             return Mark(
                 start=start,
-                mark_text=mark_text,
+                text=text,
                 target=TextFileTarget(file_path)
             )
 
