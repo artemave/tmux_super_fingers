@@ -8,20 +8,8 @@ from curses import wrapper
 from curses import ascii
 from typing import List, Any
 from tmux_super_fingers.pane import Pane
-from tmux_super_fingers.mark import Mark, UrlTarget, TextFileTarget, Highlight
-from tmux_super_fingers.utils import flatten
-
-def shell(command):
-    return subprocess.run(
-        command.split(' '),
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.decode('utf-8').rstrip()
-
-def strip(text):
-    return '\n'.join(
-        map(lambda line: line.rstrip(), text.split('\n'))
-    )
+from tmux_super_fingers.mark import Mark, Highlight
+from tmux_super_fingers.utils import flatten, shell, strip
 
 def get_tmux_pane_cwd(pane_tty):
     pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
@@ -131,33 +119,6 @@ def number_to_hint(number):
 
     return letter
 
-is_macos: bool = 'darwin' in sys.platform.lower()
-
-def perform_mark_action(mark: Mark):
-    if isinstance(mark.target, UrlTarget):
-        cmd = 'open' if is_macos else 'xdg-open'
-        return shell(f'{cmd} {mark.target.url}')
-
-    if isinstance(mark.target, TextFileTarget):
-        window_names = shell('tmux list-windows -F #{window_name}').split('\n')
-        vim_window_names = list(filter(lambda x: x == 'vim' or x == 'nvim', window_names))
-
-        if len(vim_window_names) > 0:
-            os.system('tmux select-window -t %s' %(vim_window_names[0]))
-            vim_pane_id = shell('tmux list-panes -F "#{pane_id}" -t %s' %(vim_window_names[0])).split('\n')[0]
-            os.system('tmux send-keys -t %s Escape' %(vim_pane_id))
-
-            if mark.target.line_number:
-                os.system('tmux send-keys -t %s ":e +%s %s" Enter zz' %(vim_pane_id, mark.target.line_number, mark.target.file_path))
-            else:
-                os.system('tmux send-keys -t %s ":e %s" Enter zz' %(vim_pane_id, mark.target.file_path))
-
-            return
-
-        raise Exception('Could not find "vim" or "nvim" window in the current session')
-
-    raise Exception(f'Failed to perform_mark_action for {mark}')
-
 def create_pane(pane_props) -> Pane:
     pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom, scroll_position = pane_props.split(',')
 
@@ -196,7 +157,8 @@ def main(stdscr) -> None:
         ])
 
         if len(marks_left) == 1:
-            perform_mark_action(marks_left[0])
+            chosen_mark = marks_left[0]
+            chosen_mark.perform_primary_action()
             break
 
         for pane in panes:

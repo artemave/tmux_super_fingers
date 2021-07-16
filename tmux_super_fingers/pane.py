@@ -3,7 +3,7 @@ import os
 from os.path import abspath
 from functools import cached_property
 from dataclasses import dataclass
-from .mark import MarkTarget, Mark, UrlTarget, TextFileTarget
+from .mark import Mark
 from .finders import find_marks
 
 @dataclass

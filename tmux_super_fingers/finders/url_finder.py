@@ -1,7 +1,8 @@
 import re
 from .finder import BaseFinder
 from typing import Optional, Pattern, Match
-from ..mark import Mark, UrlTarget
+from ..mark import Mark
+from ..targets import UrlTarget
 
 class UrlFinder(BaseFinder):
     """url finder"""

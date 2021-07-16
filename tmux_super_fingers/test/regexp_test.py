@@ -3,7 +3,8 @@ from typing import Dict, Any
 import os
 from pprint import pprint
 from ..pane import Pane
-from ..mark import Mark, UrlTarget, TextFileTarget
+from ..mark import Mark
+from ..targets import UrlTarget, TextFileTarget
 
 TEXT = """
 Rendered layouts/_base.html.erb (Duration: 32.9ms | Allocations: 2204)

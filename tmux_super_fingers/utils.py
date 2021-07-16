@@ -1,3 +1,4 @@
+import subprocess
 import re
 from typing import Dict, Any, List
 
@@ -10,3 +11,15 @@ def camel_to_snake(string):
 
 def flatten(list: List[List[Any]]) -> List[Any]:
     return sum(list, [])
+
+def shell(command):
+    return subprocess.run(
+        command.split(' '),
+        stdout=subprocess.PIPE,
+        check=True
+    ).stdout.decode('utf-8').rstrip()
+
+def strip(text):
+    return '\n'.join(
+        map(lambda line: line.rstrip(), text.split('\n'))
+    )

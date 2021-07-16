@@ -1,17 +1,7 @@
 from typing import Optional
 from dataclasses import dataclass
-
-class MarkTarget:
-    pass
-
-@dataclass
-class UrlTarget(MarkTarget):
-    url: str
-
-@dataclass
-class TextFileTarget(MarkTarget):
-    file_path: str
-    line_number: Optional[int] = None
+from .targets import Target
+from .actions import action_for_target_type
 
 @dataclass
 class Highlight:
@@ -24,5 +14,9 @@ class Highlight:
 
 @dataclass
 class Mark(Highlight):
-    target: MarkTarget
+    target: Target
     hint: Optional[str] = None
+
+    def perform_primary_action(self):
+        action_type = action_for_target_type(type(self.target))
+        action_type(self.target).perform()
