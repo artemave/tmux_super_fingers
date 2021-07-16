@@ -50,7 +50,7 @@ set -g @super-fingers-key f
 
 ## TODO
 
-- [ ] generic, configurable/pluggable way to send highlited text to arbitrary target (not just `vim` and `xdg-open`)
-- [ ] search marks
-- [ ] secondary action
-- [ ] configurable `@super-fingers-key`
+- [] generic, configurable/pluggable way to send highlited text to arbitrary target (not just `vim` and `xdg-open`)
+- [] search marks
+- [] secondary action
+- [x] configurable `@super-fingers-key`
