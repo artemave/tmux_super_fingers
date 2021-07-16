@@ -14,12 +14,15 @@ class TextFileTarget(MarkTarget):
     line_number: Optional[int] = None
 
 @dataclass
-class Mark:
+class Highlight:
     start: int
     text: str
-    target: Optional[MarkTarget] = None
-    hint: Optional[str] = None
 
     @property
     def end(self) -> int:
         return self.start + len(self.text)
+
+@dataclass
+class Mark(Highlight):
+    target: MarkTarget
+    hint: Optional[str] = None

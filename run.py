@@ -8,7 +8,7 @@ from curses import wrapper
 from curses import ascii
 from typing import List, Any
 from tmux_super_fingers.pane import Pane
-from tmux_super_fingers.mark import Mark, UrlTarget, TextFileTarget
+from tmux_super_fingers.mark import Mark, UrlTarget, TextFileTarget, Highlight
 from tmux_super_fingers.utils import flatten
 
 def shell(command):
@@ -68,20 +68,20 @@ def overlay_marks(stdscr, pane: Pane):
         running_character_total += len(line)
         line_end = running_character_total
 
-        marks_that_start_on_current_line = [
+        highlights_that_start_on_current_line: List[Highlight] = [
             m for m in pane.marks if line_end > m.start >= line_start
         ]
 
         if wrapped_mark_tail:
-            marks_that_start_on_current_line = [wrapped_mark_tail] + marks_that_start_on_current_line
+            highlights_that_start_on_current_line = [wrapped_mark_tail] + highlights_that_start_on_current_line
 
-        for mark in marks_that_start_on_current_line:
-            mark_line_start = mark.start - line_start
-            text = mark.text
+        for highlight in highlights_that_start_on_current_line:
+            mark_line_start = highlight.start - line_start
+            text = highlight.text
 
-            if mark.end > line_end:
-                tail_length = mark.end - line_end
-                wrapped_mark_tail = Mark(
+            if highlight.end > line_end:
+                tail_length = highlight.end - line_end
+                wrapped_mark_tail = Highlight(
                     text=text[-tail_length:],
                     start=line_end,
                 )
@@ -97,14 +97,16 @@ def overlay_marks(stdscr, pane: Pane):
                 curses.A_BOLD
             )
 
-            if mark.hint:
-                render_line(
-                    stdscr,
-                    pane.pane_top + ln,
-                    pane.pane_left + mark_line_start,
-                    mark.hint,
-                    curses.color_pair(1) | curses.A_BOLD
-                )
+            if isinstance(highlight, Mark):
+                mark = highlight
+                if mark.hint:
+                    render_line(
+                        stdscr,
+                        pane.pane_top + ln,
+                        pane.pane_left + mark_line_start,
+                        mark.hint,
+                        curses.color_pair(1) | curses.A_BOLD
+                    )
 
 def assign_hints(panes: List[Pane], filter: str) -> None:
     mark_number = 0
