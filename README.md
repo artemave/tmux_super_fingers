@@ -1,4 +1,4 @@
-# Tmux Super Fingers
+# Tmux Super Fingers [![Tmux Super Hints](https://github.com/artemave/tmux_super_fingers/actions/workflows/python-app.yml/badge.svg)](https://github.com/artemave/tmux_super_fingers/actions/workflows/python-app.yml)
 
 A tmux "mode" that allows you to open file links in vim, urls in the browser.
 
