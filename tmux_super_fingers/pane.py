@@ -27,7 +27,6 @@ class Pane:
             marks = find_marks(line, path_prefix)
             for mark in marks:
                 mark.start += running_character_total
-                mark.end += running_character_total
 
             running_character_total += len(line)
             pane_marks += marks

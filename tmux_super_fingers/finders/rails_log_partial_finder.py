@@ -27,7 +27,6 @@ class RailsLogPartialFinder(BaseFinder):
         if os.path.exists(file_path):
             return Mark(
                 start=start,
-                end=end,
                 mark_text=mark_text,
                 target=TextFileTarget(file_path)
             )

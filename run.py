@@ -84,7 +84,6 @@ def overlay_marks(stdscr, pane: Pane):
                 wrapped_mark_tail = Mark(
                     mark_text=mark_text[-tail_length:],
                     start=line_end,
-                    end=mark.end
                 )
                 mark_text = mark_text[:-tail_length]
             else:

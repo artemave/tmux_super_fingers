@@ -36,7 +36,6 @@ class DiffFilePathFinder(BaseFinder):
 
                 return Mark(
                     start=start,
-                    end=end,
                     mark_text=mark_text,
                     target=mark_target
                 )
