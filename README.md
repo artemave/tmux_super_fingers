@@ -55,3 +55,4 @@ set -g @super-fingers-key f
 - [ ] secondary action
 - [x] configurable `@super-fingers-key`
 - [ ] create vim window if there are none in the session
+- [ ] extract untested code into tested packages
