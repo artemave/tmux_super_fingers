@@ -3,6 +3,7 @@ from typing import Optional
 from .os_openable import OsOpenable
 from .target import Target
 
+
 @dataclass
 class _TextFileTarget(Target):
     file_path: str
@@ -11,6 +12,7 @@ class _TextFileTarget(Target):
     @property
     def file_or_url(self) -> str:
         return self.file_path
+
 
 class TextFileTarget(_TextFileTarget, OsOpenable):
     pass

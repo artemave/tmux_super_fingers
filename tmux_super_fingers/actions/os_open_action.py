@@ -3,6 +3,7 @@ from ..utils import shell
 from .action import Action
 from ..targets import OsOpenable
 
+
 class OsOpenAction(Action):
     target: OsOpenable
 

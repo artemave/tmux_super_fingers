@@ -1,3 +1,4 @@
+# flake8: noqa
 from .target import Target
 from .os_openable import OsOpenable
 from .url_target import UrlTarget

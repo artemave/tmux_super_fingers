@@ -5,6 +5,7 @@ from typing import Optional, Pattern, Match
 from ..mark import Mark
 from ..targets import TextFileTarget
 
+
 class DiffFilePathFinder(BaseFinder):
     """
     Finds file path from text like this:

@@ -6,6 +6,7 @@ from ..targets import TextFileTarget
 from ..utils import camel_to_snake
 from .finder import BaseFinder
 
+
 class RailsLogControllerFinder(BaseFinder):
     """
     From a text that looks like this `Processing by OrdersController#show as HTML` this finder

@@ -10,9 +10,9 @@ from .diff_file_path_finder import DiffFilePathFinder
 # import image_file_path_finder
 
 PATTERN = re.compile(
-        'Render(?:ed|ing) (?P<rails_log_partial>[-a-zA-Z0-9_+-,./]+)|'
-        '\\+\\+\\+ b/?(?P<diff_path>([~./]?[-a-zA-Z0-9_+-,./]+(?::\\d+)?))|'
-        )
+    'Render(?:ed|ing) (?P<rails_log_partial>[-a-zA-Z0-9_+-,./]+)|'
+    '\\+\\+\\+ b/?(?P<diff_path>([~./]?[-a-zA-Z0-9_+-,./]+(?::\\d+)?))|'
+)
 
 FINDERS = [
     RailsLogControllerFinder,
@@ -21,6 +21,7 @@ FINDERS = [
     RailsLogPartialFinder,
     DiffFilePathFinder
 ]
+
 
 def find_marks(text: str, path_prefix: str) -> List[Mark]:
     all_marks = flatten(
@@ -32,5 +33,7 @@ def find_marks(text: str, path_prefix: str) -> List[Mark]:
     return _remove_overlapping_marks(all_marks)
 
 # TODO: implement this
+
+
 def _remove_overlapping_marks(marks: List[Mark]) -> List[Mark]:
     return marks

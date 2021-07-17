@@ -5,6 +5,7 @@ from typing import Optional, Pattern, Match
 from ..mark import Mark
 from ..targets import TextFileTarget
 
+
 class TextFilePathFinder(BaseFinder):
     """finds text files with line numbers (if any)"""
 

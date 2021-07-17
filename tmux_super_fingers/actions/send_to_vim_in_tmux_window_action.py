@@ -3,6 +3,7 @@ import os
 from ..utils import shell
 from ..targets import TextFileTarget
 
+
 class SendToVimInTmuxWindowAction(Action):
     target: TextFileTarget
 
@@ -15,7 +16,7 @@ class SendToVimInTmuxWindowAction(Action):
         if vim_window_name:
             os.system(f'tmux select-window -t {vim_window_name}')
             vim_pane_id = shell(
-                'tmux list-panes -F "#{pane_id}" -t %s' %(vim_window_name)
+                'tmux list-panes -F "#{pane_id}" -t %s' % (vim_window_name)
             ).split('\n')[0]
             os.system(f'tmux send-keys -t {vim_pane_id} Escape')
             os.system(f'tmux send-keys -t {vim_pane_id} ":e {self._vim_e_args()}" Enter zz')

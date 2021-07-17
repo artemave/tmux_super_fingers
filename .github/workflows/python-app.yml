@@ -31,21 +31,23 @@ jobs:
         path: ~/.local/share/virtualenvs
         key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
-    - name: Install packages
+    - name: Install python packages
       if: steps.cache-pipenv.outputs.cache-hit != 'true'
-      run: |
-        pipenv install --dev
+      run: pipenv install --dev
 
     - name: Setup node.js (for pyright)
       uses: actions/setup-node@v1
       with:
         node-version: "16"
 
+    - name: Install node packages
+      run: yarn install
+
     - name: Run type checking
-      run: |
-        npm install -g pyright
-        pyright
+      run: pyright
+
+    - name: Lint
+      run: pipenv run flake8
 
     - name: Test
-      run: |
-        pipenv run pytest
+      run: pipenv run pytest

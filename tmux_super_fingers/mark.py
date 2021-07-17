@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from .targets import Target
 from .actions import action_for_target_type
 
+
 @dataclass
 class Highlight:
     start: int
@@ -11,6 +12,7 @@ class Highlight:
     @property
     def end(self) -> int:
         return self.start + len(self.text)
+
 
 @dataclass
 class Mark(Highlight):

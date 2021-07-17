@@ -5,6 +5,7 @@ from typing import Optional, Match, Pattern, List
 from ..mark import Mark
 from ..utils import compact
 
+
 class BaseFinder(metaclass=ABCMeta):
     """Base finder class"""
 

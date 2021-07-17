@@ -1,10 +1,10 @@
-from typing import Optional, List
-import os
-from os.path import abspath
-from functools import cached_property
 from dataclasses import dataclass
-from .mark import Mark
+from functools import cached_property
+from typing import List
+
 from .finders import find_marks
+from .mark import Mark
+
 
 @dataclass
 class Pane:
@@ -37,6 +37,7 @@ class Pane:
         #     marks = compact(executor.map(lambda m: find_match(m, text, path_prefix), matches))
 
         return _unique_sorted_marks(pane_marks)
+
 
 def _unique_sorted_marks(marks: List[Mark]) -> List[Mark]:
     index = {}
