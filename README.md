@@ -54,3 +54,4 @@ set -g @super-fingers-key f
 - [ ] search marks
 - [ ] secondary action
 - [x] configurable `@super-fingers-key`
+- [ ] create vim window if there are none in the session
