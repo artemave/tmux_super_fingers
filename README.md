@@ -3,7 +3,7 @@
 
 <img width="300" src="https://78.media.tumblr.com/e1712952f6eb24f418a997a8da6ae831/tumblr_ou1znif6LW1w4t58uo1_500.gif" />
 
-A tmux "mode" that allows you to open file links in vim, urls in the browser.
+A tmux "mode" that allows you to open file links in vim, urls in the browser, etc.
 
 
 <details>
