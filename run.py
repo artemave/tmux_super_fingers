@@ -12,7 +12,7 @@ from tmux_super_fingers.utils import flatten, shell, strip
 
 def get_tmux_pane_cwd(pane_tty):
     pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
-    return shell(f'readlink -e /proc/{pane_shell_pid}/cwd')
+    return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
 
 
 def get_panes() -> List[Pane]:
