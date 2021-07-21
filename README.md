@@ -1,6 +1,10 @@
 # Tmux Super Fingers [![Tmux Super Fingers](https://github.com/artemave/tmux_super_fingers/actions/workflows/python-app.yml/badge.svg)](https://github.com/artemave/tmux_super_fingers/actions/workflows/python-app.yml)
 
+
+<img width="300" src="https://78.media.tumblr.com/e1712952f6eb24f418a997a8da6ae831/tumblr_ou1znif6LW1w4t58uo1_500.gif" />
+
 A tmux "mode" that allows you to open file links in vim, urls in the browser.
+
 
 <details>
   <summary>Demo</summary>
@@ -8,8 +12,6 @@ A tmux "mode" that allows you to open file links in vim, urls in the browser.
   https://user-images.githubusercontent.com/23721/124262753-b2d3ba00-db32-11eb-83ee-77c65dd00d39.mp4
     
 </details>
-
-<img width="600" src="https://78.media.tumblr.com/e1712952f6eb24f418a997a8da6ae831/tumblr_ou1znif6LW1w4t58uo1_500.gif" />
 
 ## Description
 
