@@ -4,7 +4,7 @@ from typing import Any, List
 
 
 # Sadly, type system can't help us here: https://github.com/python/mypy/issues/8881
-def compact(things: List[Any]) -> List[Any]:
+def compact(things):
     return [e for e in things if e is not None]
 
 
