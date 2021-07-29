@@ -11,6 +11,7 @@ A tmux "mode" that allows you to open file links in vim, urls in the browser and
     
   https://user-images.githubusercontent.com/23721/124262753-b2d3ba00-db32-11eb-83ee-77c65dd00d39.mp4
     
+  Note: tmux prefix is <kbd>Ctrl</kbd> + <kbd>Space<kbd/>
 </details>
 
 ## Description
