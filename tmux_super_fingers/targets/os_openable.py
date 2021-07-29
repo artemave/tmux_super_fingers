@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
+from .target import Target
 
 
-class OsOpenable(metaclass=ABCMeta):
+class OsOpenable(Target, metaclass=ABCMeta):
     """ Anything that can be sent to open/xdg-open. """
 
     @property

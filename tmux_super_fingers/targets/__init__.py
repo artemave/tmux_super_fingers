@@ -1,4 +1,5 @@
 # flake8: noqa
+# type: ignore
 from .target import Target
 from .os_openable import OsOpenable
 from .url_target import UrlTarget

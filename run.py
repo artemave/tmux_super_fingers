@@ -10,13 +10,13 @@ from tmux_super_fingers.pane import Pane
 from tmux_super_fingers.utils import flatten, shell, strip
 
 
-def get_tmux_pane_cwd(pane_tty):
+def get_tmux_pane_cwd(pane_tty: str) -> str:
     pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
     return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
 
 
 def get_panes() -> List[Pane]:
-    panes_props = shell(
+    panes_props: List[str] = shell(
         'tmux list-panes -t ! -F #{pane_id},#{pane_tty},#{pane_left},'
         '#{pane_right},#{pane_top},#{pane_bottom},#{scroll_position}'
     ).split('\n')
@@ -26,7 +26,7 @@ def get_panes() -> List[Pane]:
     return list(panes)
 
 
-def render_pane_text(stdscr, pane: Pane):
+def render_pane_text(stdscr: curses.window, pane: Pane) -> None:
     if pane.pane_top > 0:
         pane_width = pane.pane_right - pane.pane_left + 1
         render_line(stdscr, pane.pane_top - 1, pane.pane_left, '─' * pane_width, curses.A_DIM)
@@ -44,7 +44,7 @@ def render_pane_text(stdscr, pane: Pane):
 # https://stackoverflow.com/questions/7063128/last-character-of-a-window-in-python-curses
 
 
-def render_line(stdscr, y, x, line, color):
+def render_line(stdscr: curses.window, y: int, x: int, line: str, color: int) -> None:
     try:
         stdscr.addstr(y, x, line, color)
     except curses.error:
@@ -52,7 +52,7 @@ def render_line(stdscr, y, x, line, color):
         stdscr.insstr(y, x, line[:-1], color)
 
 
-def overlay_marks(stdscr, pane: Pane):
+def overlay_marks(stdscr: curses.window, pane: Pane) -> None:
     running_character_total = 0
     wrapped_mark_tail = None
 
@@ -117,7 +117,7 @@ def assign_hints(panes: List[Pane], filter: str) -> None:
             mark_number += 1
 
 
-def number_to_hint(number):
+def number_to_hint(number: int) -> str:
     prefix = int(number / 26)
     letter_number = number % 26
     letter = chr(97 + letter_number)
@@ -128,7 +128,7 @@ def number_to_hint(number):
     return letter
 
 
-def create_pane(pane_props) -> Pane:
+def create_pane(pane_props: str) -> Pane:
     pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom, scroll_position = pane_props.split(',')
 
     vertical_offset = 0
@@ -150,7 +150,7 @@ def create_pane(pane_props) -> Pane:
     )
 
 
-def main(stdscr) -> None:
+def main(stdscr: curses.window) -> None:
     # To inherit window background
     curses.use_default_colors()
     curses.curs_set(False)

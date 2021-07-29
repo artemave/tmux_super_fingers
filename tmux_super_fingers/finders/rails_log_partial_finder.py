@@ -16,13 +16,13 @@ class RailsLogPartialFinder(BaseFinder):
     """
 
     @classmethod
-    def pattern(cls) -> Pattern:
+    def pattern(cls) -> Pattern[str]:
         return re.compile(
             r'Render(?:ed|ing) ([-a-zA-Z0-9_+-,./]+)'
         )
 
-    def match_to_mark(self, match: Match) -> Optional[Mark]:
-        start, end = match.span(1)
+    def match_to_mark(self, match: Match[str]) -> Optional[Mark]:
+        start = match.span(1)[0]
         text = match.group(1)
         file_path = os.path.join(self.path_prefix, 'app/views/' + text)
 

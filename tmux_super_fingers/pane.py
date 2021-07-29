@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
-from typing import List
+from typing import List, Dict
 
 from .finders import find_marks
 from .mark import Mark
@@ -40,7 +40,7 @@ class Pane:
 
 
 def _unique_sorted_marks(marks: List[Mark]) -> List[Mark]:
-    index = {}
+    index: Dict[str, Mark] = {}
     for mark in marks:
         index[mark.text] = mark
 
