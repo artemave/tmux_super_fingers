@@ -44,7 +44,7 @@ jobs:
       run: yarn install
 
     - name: Run type checking
-      run: yarn run pyright
+      run: pipenv run yarn run pyright
 
     - name: Lint
       run: pipenv run flake8
