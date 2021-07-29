@@ -3,13 +3,13 @@ from ..targets import UrlTarget
 from .test_utils import create_pane
 
 
-def test_skips_duplicate_marks():
+def test_finds_url():
     pane = create_pane({
-        'unwrapped_text': 'Some url https://wfhftw.org yarp hm https://wfhftw.org yarp',
+        'unwrapped_text': 'Some url https://wfhftw.org yarp',
     })
     expected_marks = [
         Mark(
-            start=36,
+            start=9,
             text='https://wfhftw.org',
             target=UrlTarget(
                 url='https://wfhftw.org'
