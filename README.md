@@ -58,3 +58,4 @@ set -g @super-fingers-key f
 - [x] configurable `@super-fingers-key`
 - [x] create vim window if there are none in the session
 - [ ] extract untested code into tested packages
+- [ ] python stack traces (line numbers)
