@@ -1,4 +1,4 @@
-from __future__ import annotations # https://stackoverflow.com/a/33533514/51209
+from __future__ import annotations  # https://stackoverflow.com/a/33533514/51209
 from dataclasses import dataclass
 from functools import cached_property
 from typing import List, Dict
@@ -6,6 +6,7 @@ from typing import List, Dict
 from .finders import find_marks
 from .mark import Mark
 from .utils import shell, strip
+from .pane_props import PaneProps
 
 
 def _get_tmux_pane_cwd(pane_tty: str) -> str:
@@ -25,35 +26,31 @@ class Pane:
 
     @classmethod
     def get_current_window_panes(cls) -> List[Pane]:
-        panes_props: List[str] = shell(
-            'tmux list-panes -t ! -F #{pane_id},#{pane_tty},#{pane_left},'
-            '#{pane_right},#{pane_top},#{pane_bottom},#{scroll_position}'
-        ).split('\n')
+        panes_props: List[PaneProps] = PaneProps.current_window_panes_props()
 
         panes = map(cls._create_pane_from_props, panes_props)
 
         return list(panes)
 
     @classmethod
-    def _create_pane_from_props(cls, pane_props: str) -> Pane:
-        pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom, scroll_position = \
-                pane_props.split(',')
-
+    def _create_pane_from_props(cls, pane_props: PaneProps) -> Pane:
         vertical_offset = 0
-        if len(scroll_position) > 0:
-            vertical_offset = int(scroll_position)
+        if len(pane_props.scroll_position) > 0:
+            vertical_offset = int(pane_props.scroll_position)
 
-        pane_bottom = int(pane_bottom)
+        pane_bottom = int(pane_props.pane_bottom)
         start = -vertical_offset
         end = pane_bottom - vertical_offset
 
         return cls(
-            unwrapped_text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -J -t {pane_id}')),
-            text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -t {pane_id}')),
-            pane_current_path=_get_tmux_pane_cwd(pane_tty),
-            pane_left=int(pane_left),
-            pane_right=int(pane_right),
-            pane_top=int(pane_top),
+            unwrapped_text=strip(
+                shell(f'tmux capture-pane -p -S {start} -E {end} -J -t {pane_props.pane_id}')
+            ),
+            text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -t {pane_props.pane_id}')),
+            pane_current_path=_get_tmux_pane_cwd(pane_props.pane_tty),
+            pane_left=int(pane_props.pane_left),
+            pane_right=int(pane_props.pane_right),
+            pane_top=int(pane_props.pane_top),
             pane_bottom=pane_bottom,
         )
 
