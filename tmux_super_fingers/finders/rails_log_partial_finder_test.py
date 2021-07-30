@@ -9,7 +9,7 @@ def test_finds_rails_partial(change_test_dir: str):
     pane = {
             'unwrapped_text': 'Rendered partials/_client_user_bar.html.erb'
             '(Duration: 22.6ms | Allocations: 5429)',
-            'pane_current_path': os.getcwd()}
+            'current_path': os.getcwd()}
     expected_marks = [
             Mark(
                 start=9,

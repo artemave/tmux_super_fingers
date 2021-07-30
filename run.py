@@ -11,18 +11,18 @@ from tmux_super_fingers.utils import flatten
 
 
 def render_pane_text(stdscr: curses.window, pane: Pane) -> None:
-    if pane.pane_top > 0:
-        pane_width = pane.pane_right - pane.pane_left + 1
-        render_line(stdscr, pane.pane_top - 1, pane.pane_left, '─' * pane_width, curses.A_DIM)
+    if pane.top > 0:
+        pane_width = pane.right - pane.left + 1
+        render_line(stdscr, pane.top - 1, pane.left, '─' * pane_width, curses.A_DIM)
 
-    if pane.pane_left > 0:
-        pane_height = pane.pane_bottom - pane.pane_top + 1
+    if pane.left > 0:
+        pane_height = pane.bottom - pane.top + 1
         for ln in range(pane_height):
-            render_line(stdscr, pane.pane_top + ln, pane.pane_left - 1, '│', curses.A_DIM)
+            render_line(stdscr, pane.top + ln, pane.left - 1, '│', curses.A_DIM)
 
     lines = pane.text.split('\n')
     for ln, line in enumerate(lines):
-        render_line(stdscr, pane.pane_top + ln, pane.pane_left, line, curses.A_DIM)
+        render_line(stdscr, pane.top + ln, pane.left, line, curses.A_DIM)
 
 # Workaround for:
 # https://stackoverflow.com/questions/7063128/last-character-of-a-window-in-python-curses
@@ -69,8 +69,8 @@ def overlay_marks(stdscr: curses.window, pane: Pane) -> None:
 
             render_line(
                 stdscr,
-                pane.pane_top + ln,
-                pane.pane_left + mark_line_start,
+                pane.top + ln,
+                pane.left + mark_line_start,
                 text,
                 curses.A_BOLD
             )
@@ -80,8 +80,8 @@ def overlay_marks(stdscr: curses.window, pane: Pane) -> None:
                 if mark.hint:
                     render_line(
                         stdscr,
-                        pane.pane_top + ln,
-                        pane.pane_left + mark_line_start,
+                        pane.top + ln,
+                        pane.left + mark_line_start,
                         mark.hint,
                         curses.color_pair(1) | curses.A_BOLD
                     )

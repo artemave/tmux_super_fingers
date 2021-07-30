@@ -16,11 +16,11 @@ end
 def create_pane(pane_obj: Dict[str, Any]) -> Pane:
     pane: Dict[str, Any] = {
         'text': 'some text',
-        'pane_current_path': os.getcwd(),
-        'pane_left': 0,
-        'pane_right': 0,
-        'pane_top': 0,
-        'pane_bottom': 0
+        'current_path': os.getcwd(),
+        'left': 0,
+        'right': 0,
+        'top': 0,
+        'bottom': 0
     }
     pane.update(pane_obj)
     return Pane(**pane)

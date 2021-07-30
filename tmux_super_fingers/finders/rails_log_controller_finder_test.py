@@ -24,7 +24,7 @@ Completed 200 OK in 307ms (Views: 256.6ms | ActiveRecord: 17.5ms | Allocations: 
 def test_finds_rails_controller(change_test_dir: str):
     pane = {
             'unwrapped_text': 'Processing by OrdersController#show as HTML',
-            'pane_current_path': os.getcwd()
+            'current_path': os.getcwd()
             }
     expected_marks = [
             Mark(

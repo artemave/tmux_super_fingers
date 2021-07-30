@@ -18,11 +18,11 @@ def _get_tmux_pane_cwd(pane_tty: str) -> str:
 class Pane:
     unwrapped_text: str
     text: str
-    pane_current_path: str
-    pane_left: int
-    pane_right: int
-    pane_top: int
-    pane_bottom: int
+    current_path: str
+    left: int
+    right: int
+    top: int
+    bottom: int
 
     @classmethod
     def get_current_window_panes(cls) -> List[Pane]:
@@ -47,17 +47,17 @@ class Pane:
                 shell(f'tmux capture-pane -p -S {start} -E {end} -J -t {pane_props.pane_id}')
             ),
             text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -t {pane_props.pane_id}')),
-            pane_current_path=_get_tmux_pane_cwd(pane_props.pane_tty),
-            pane_left=int(pane_props.pane_left),
-            pane_right=int(pane_props.pane_right),
-            pane_top=int(pane_props.pane_top),
-            pane_bottom=pane_bottom,
+            current_path=_get_tmux_pane_cwd(pane_props.pane_tty),
+            left=int(pane_props.pane_left),
+            right=int(pane_props.pane_right),
+            top=int(pane_props.pane_top),
+            bottom=pane_bottom,
         )
 
     @cached_property
     def marks(self) -> List[Mark]:
         pane_marks: List[Mark] = []
-        path_prefix = self.pane_current_path
+        path_prefix = self.current_path
         unwrapped_text = self.unwrapped_text
         running_character_total = 0
 

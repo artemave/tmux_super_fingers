@@ -12,7 +12,7 @@ Hello
     """
     pane = {
         'unwrapped_text': text,
-        'pane_current_path': os.getcwd()
+        'current_path': os.getcwd()
     }
     expected_marks = [
         Mark(
@@ -29,7 +29,7 @@ Hello
 def test_finds_relative_file_with_line_number(change_test_dir: str):
     pane = {
         'unwrapped_text': 'Stuff in ./app/controllers/orders_controller.rb:32',
-        'pane_current_path': os.getcwd()
+        'current_path': os.getcwd()
     }
     expected_marks = [
         Mark(
@@ -48,7 +48,7 @@ def test_finds_absolute_file(change_test_dir: str):
     cwd = os.getcwd()
     pane = {
         'unwrapped_text': f'Stuff in {cwd}/app/controllers/orders_controller.rb hello',
-        'pane_current_path': cwd
+        'current_path': cwd
     }
     expected_marks = [
         Mark(

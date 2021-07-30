@@ -14,7 +14,7 @@ index c06609e..0f33345 100644
     """
     pane = {
         'unwrapped_text': text,
-        'pane_current_path': os.getcwd()
+        'current_path': os.getcwd()
     }
     expected_marks = [
         Mark(
