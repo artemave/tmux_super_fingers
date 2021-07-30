@@ -7,23 +7,7 @@ from typing import List
 
 from tmux_super_fingers.mark import Highlight, Mark
 from tmux_super_fingers.pane import Pane
-from tmux_super_fingers.utils import flatten, shell, strip
-
-
-def get_tmux_pane_cwd(pane_tty: str) -> str:
-    pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
-    return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
-
-
-def get_panes() -> List[Pane]:
-    panes_props: List[str] = shell(
-        'tmux list-panes -t ! -F #{pane_id},#{pane_tty},#{pane_left},'
-        '#{pane_right},#{pane_top},#{pane_bottom},#{scroll_position}'
-    ).split('\n')
-
-    panes = map(create_pane, panes_props)
-
-    return list(panes)
+from tmux_super_fingers.utils import flatten
 
 
 def render_pane_text(stdscr: curses.window, pane: Pane) -> None:
@@ -128,35 +112,13 @@ def number_to_hint(number: int) -> str:
     return letter
 
 
-def create_pane(pane_props: str) -> Pane:
-    pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom, scroll_position = pane_props.split(',')
-
-    vertical_offset = 0
-    if len(scroll_position) > 0:
-        vertical_offset = int(scroll_position)
-
-    pane_bottom = int(pane_bottom)
-    start = -vertical_offset
-    end = pane_bottom - vertical_offset
-
-    return Pane(
-        unwrapped_text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -J -t {pane_id}')),
-        text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -t {pane_id}')),
-        pane_current_path=get_tmux_pane_cwd(pane_tty),
-        pane_left=int(pane_left),
-        pane_right=int(pane_right),
-        pane_top=int(pane_top),
-        pane_bottom=pane_bottom,
-    )
-
-
 def main(stdscr: curses.window) -> None:
     # To inherit window background
     curses.use_default_colors()
     curses.curs_set(False)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
 
-    panes = get_panes()
+    panes: List[Pane] = Pane.get_current_window_panes()
 
     hint = ''
     while True:

@@ -7,6 +7,9 @@ from typing import List, Optional
 from ..utils import shell
 from ..targets import TextFileTarget
 
+# emacs go to line number:
+#   send-keys -t %3 M-x goto-line Enter 3 Enter
+
 
 @dataclass
 class PaneInfo:
@@ -14,7 +17,7 @@ class PaneInfo:
     tty: str
 
 
-class SendToVimInTmuxWindowAction(Action):
+class SendToVimInTmuxPaneAction(Action):
     target: TextFileTarget
 
     def perform(self) -> None:

@@ -3,7 +3,7 @@
 
 <img width="300" src="https://78.media.tumblr.com/e1712952f6eb24f418a997a8da6ae831/tumblr_ou1znif6LW1w4t58uo1_500.gif" />
 
-A tmux "mode" that allows you to open file links in vim, urls in the browser and more.
+A tmux "mode" that allows you to open file links in an `$EDITOR`, urls in the browser and more.
 
 
 <details>
@@ -14,16 +14,17 @@ A tmux "mode" that allows you to open file links in vim, urls in the browser and
 
 ## Description
 
-Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) are highlighted and assigned a "mark". When user hits a key corresponding to the mark, the highlighted text gets copied to clipboard.
+Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) are highlighted and assigned a "mark". When user hits a mark key, the highlighted text gets copied to clipboard.
 
-Super fingers extends on this idea. Notably:
+Super Fingers extends this idea. Notably:
 
-- it opens files in vim running elsewhere within the same tmux session*
-- it opens files at line number
+- it opens files in a terminal `$EDITOR` running elsewhere within the same tmux session* (for gui `$EDITOR`s, it'll simply call OS open)
 - only files paths that actually exist are highlighted
+- it opens files at line number
 - text that isn't a file path, but maps onto one (e.g. `UsersController#show` in rails log or `+++ b/app/models/user.rb` in a diff) is also highlighted
+- it opens different types of marks differently: text files are sent to editor, urls and images to OS open, etc.
 
-\* _if no running (n)vim is found in the session, plugin attempts to start nvim in a new window and, failing that, attempts to start vim._
+\* _if no running terminal `$EDITOR` is found in the session, plugin attempts to start one in a new window._
 
 ### Secondary action
 
