@@ -1,5 +1,4 @@
 import re
-from functools import cached_property
 from .action import Action
 import os
 from typing import Optional
@@ -15,34 +14,27 @@ class SendToVimInTmuxPaneAction(Action):
     target: TextFileTarget
 
     def perform(self) -> None:
-        vim_pane_id = self._find_vim_pane_id()
+        vim_pane_id = self._find_editor_pane_id()
 
         if vim_pane_id:
             os.system(f'tmux select-window -t {vim_pane_id}')
             os.system(f'tmux send-keys -t {vim_pane_id} Escape')
-            os.system(f'tmux send-keys -t {vim_pane_id} ":e {self._vim_e_args}" Enter zz')
+            os.system(f'tmux send-keys -t {vim_pane_id} ":e {self._vim_e_args()}" Enter zz')
         else:
             os.system(
-                f'tmux new-window -n {self._vim_cmd}'
-                f" '{self._vim_cmd} {self._vim_e_args}; {os.environ['SHELL']} -i'"
+                f"tmux new-window -n {os.environ['EDITOR']}"
+                f" '{os.environ['EDITOR']} {self._vim_e_args()}; {os.environ['SHELL']} -i'"
             )
 
-    @cached_property
-    def _vim_cmd(self) -> str:
-        try:
-            os.system('command -v nvim')
-            return 'nvim'
-        except Exception:
-            return 'vim'
-
-    @cached_property
     def _vim_e_args(self) -> str:
         if self.target.line_number:
             return f'+{self.target.line_number} {self.target.file_path}'
 
         return f'{self.target.file_path}'
 
-    def _find_vim_pane_id(self) -> Optional[str]:
+    # TODO: this doesn't really belong here and can be reused as soon as we support
+    # more terminal editors (e.g. emacs)
+    def _find_editor_pane_id(self) -> Optional[str]:
         session_panes_props = PaneProps.session_panes_props()
 
         tty_list = [pane_props.pane_tty for pane_props in session_panes_props]
@@ -50,7 +42,7 @@ class SendToVimInTmuxPaneAction(Action):
         tty_infos = shell(f"ps -o state= -o comm= -o tty= -t {','.join(tty_list)}").split('\n')
 
         vim_process_info = next(iter([
-            info for info in tty_infos if re.search(r'^[^TXZ] +n?vim', info)
+            info for info in tty_infos if re.search(r'^[^TXZ] +' + os.environ['EDITOR'], info)
         ]), None)
 
         if vim_process_info:
