@@ -4,7 +4,7 @@ from typing import Type
 from ..targets import TextFileTarget, Target
 from .action import Action
 from .os_open_action import OsOpenAction
-from .send_to_vim_in_tmux_window_action import SendToVimInTmuxPaneAction
+from .send_to_vim_in_tmux_pane_action import SendToVimInTmuxPaneAction
 
 # TODO: actions from config
 
