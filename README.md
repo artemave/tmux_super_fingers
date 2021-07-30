@@ -8,10 +8,8 @@ A tmux "mode" that allows you to open file links in vim, urls in the browser and
 
 <details>
   <summary>Demo</summary>
-    
-  https://user-images.githubusercontent.com/23721/124262753-b2d3ba00-db32-11eb-83ee-77c65dd00d39.mp4
-    
-  Note: tmux prefix is <kbd>Ctrl</kbd> + <kbd>Space<kbd/>
+
+  https://user-images.githubusercontent.com/23721/127636969-6c7785b9-d749-416a-ad5d-275fb38e00e0.mp4
 </details>
 
 ## Description
