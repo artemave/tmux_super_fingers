@@ -1,6 +1,7 @@
 from __future__ import annotations  # https://stackoverflow.com/a/33533514/51209
 from dataclasses import dataclass
 from typing import List
+
 from .utils import shell
 
 
@@ -15,9 +16,17 @@ class PaneProps:
     scroll_position: str
 
     @classmethod
+    def session_panes_props(cls) -> List[PaneProps]:
+        return cls._get_panes_props('-s')
+
+    @classmethod
     def current_window_panes_props(cls) -> List[PaneProps]:
+        return cls._get_panes_props('-t !')
+
+    @classmethod
+    def _get_panes_props(cls, tmux_target: str) -> List[PaneProps]:
         props: List[str] = shell(
-            'tmux list-panes -t ! -F #{pane_id},#{pane_tty},#{pane_left},'
+            'tmux list-panes ' + tmux_target + ' -F #{pane_id},#{pane_tty},#{pane_left},'
             '#{pane_right},#{pane_top},#{pane_bottom},#{scroll_position}'
         ).split('\n')
 

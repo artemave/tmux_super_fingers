@@ -1,20 +1,14 @@
 import re
 from functools import cached_property
-from dataclasses import dataclass
 from .action import Action
 import os
-from typing import List, Optional
+from typing import Optional
 from ..utils import shell
 from ..targets import TextFileTarget
+from ..pane_props import PaneProps
 
 # emacs go to line number:
 #   send-keys -t %3 M-x goto-line Enter 3 Enter
-
-
-@dataclass
-class PaneInfo:
-    id: str
-    tty: str
 
 
 class SendToVimInTmuxPaneAction(Action):
@@ -49,7 +43,9 @@ class SendToVimInTmuxPaneAction(Action):
         return f'{self.target.file_path}'
 
     def _find_vim_pane_id(self) -> Optional[str]:
-        tty_list = [pane_info.tty for pane_info in self._session_panes]
+        session_panes_props = PaneProps.session_panes_props()
+
+        tty_list = [pane_props.pane_tty for pane_props in session_panes_props]
 
         tty_infos = shell(f"ps -o state= -o comm= -o tty= -t {','.join(tty_list)}").split('\n')
 
@@ -60,11 +56,6 @@ class SendToVimInTmuxPaneAction(Action):
         if vim_process_info:
             vim_pane_tty = re.split(' +', vim_process_info)[-1]
             return [
-                pane_info.id for pane_info in self._session_panes if pane_info.tty == f'/dev/{vim_pane_tty}'
+                pane_props.pane_id for pane_props in session_panes_props
+                if pane_props.pane_tty == f'/dev/{vim_pane_tty}'
             ][0]
-
-    # TODO: move into its own thing because it'll be needed elsewhere
-    @cached_property
-    def _session_panes(self) -> List[PaneInfo]:
-        session_panes: List[str] = shell('tmux list-panes -s -F #{pane_id},#{pane_tty}').split('\n')
-        return [PaneInfo(*pane_info.split(',')) for pane_info in session_panes]
