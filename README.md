@@ -9,7 +9,8 @@ A tmux "mode" that allows you to open file links in an `$EDITOR`, urls in the br
 <details>
   <summary>Demo</summary>
 
-  https://user-images.githubusercontent.com/23721/127636969-6c7785b9-d749-416a-ad5d-275fb38e00e0.mp4
+https://user-images.githubusercontent.com/23721/127735461-e716cca9-c6e4-46b9-97d1-05bc7f84e00c.mp4
+
 </details>
 
 ## Description
