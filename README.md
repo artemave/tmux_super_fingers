@@ -16,17 +16,21 @@ https://user-images.githubusercontent.com/23721/127735461-e716cca9-c6e4-46b9-97d
 
 ## Description
 
-Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) are highlighted and assigned a "mark". When user hits a mark key, the highlighted text gets copied to clipboard.
+Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) are highlighted and assigned a "mark". When user hits the mark key, the highlighted text gets copied to clipboard.
 
-Super Fingers extends this idea. Notably:
+Super Fingers builds upon this idea. Notably:
 
-- it opens files in a terminal `$EDITOR` running elsewhere within the same tmux session* (for gui `$EDITOR`s, it'll simply call OS open)
+- it opens files in a terminal `$EDITOR`* running elsewhere within the same tmux session**
 - only files paths that actually exist are highlighted
 - it opens files at line number
 - text that isn't a file path, but maps onto one (e.g. `UsersController#show` in rails log or `+++ b/app/models/user.rb` in a diff) is also highlighted
-- it opens different types of marks differently: text files are sent to editor, urls and images to OS open, etc.
+- different types of marks are actioned differently: text files are sent to editor, urls and image files - to OS open.***
 
-\* _if no running terminal `$EDITOR` is found in the session, plugin attempts to start one in a new window._
+\* _currently this behavior only works for (n)vim - everything else is sent to OS open._
+
+\** _if no running terminal `$EDITOR` is found in the session, plugin attempts to start one in a new window._
+
+\*** _code is designed in such a way that it should be easy to add new types of marks/actions._
 
 ### Secondary action
 
@@ -36,11 +40,25 @@ If you press <kbd>alt</kbd> when choosing a mark, highlighted text is copied int
 
 Requires python3.
 
-Use [TPM](https://github.com/tmux-plugins/tpm):
+### Using [TPM](https://github.com/tmux-plugins/tpm):
 
     set -g @plugin 'artemave/tmux_super_fingers'
     
 Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin.
+
+### Manual
+
+Clone the repo:
+
+    git clone https://github.com/artemave/tmux_super_fingers ~/.tmux/plugins/tmux_fingers_fingers
+
+Source it in your `.tmux.conf`:
+
+    run-shell ~/.tmux/plugins/tmux_fingers_fingers/tmux_super_fingers.tmux
+
+Reload TMUX conf by running:
+
+    tmux source-file ~/.tmux.conf
 
 ## Configuration
 
