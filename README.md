@@ -26,11 +26,9 @@ Super Fingers builds upon this idea. Notably:
 - text that isn't a file path, but maps onto one (e.g. `UsersController#show` in rails log or `+++ b/app/models/user.rb` in a diff) is also highlighted
 - different types of marks are actioned differently: text files are sent to editor, urls and image files - to OS open.***
 
-\* _currently this behavior only works for (n)vim - everything else is sent to OS open._
-
-\** _if no running terminal `$EDITOR` is found in the session, plugin attempts to start one in a new window._
-
-\*** _code is designed in such a way that it should be easy to add new types of marks/actions._
+\* _currently this behavior only works for (n)vim - everything else is sent to OS open._</br>
+\** _if no running terminal `$EDITOR` is found in the session, plugin attempts to start one in a new window._</br>
+\*** _code is designed in such a way that it should be easy to add new types of marks/actions._</br>
 
 ### Secondary action
 
