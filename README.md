@@ -50,7 +50,7 @@ Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin.
 
 Clone the repo:
 
-    git clone https://github.com/artemave/tmux_super_fingers ~/.tmux/plugins/tmux_fingers_fingers
+    git clone https://github.com/artemave/tmux_super_fingers.git ~/.tmux/plugins/tmux_fingers_fingers
 
 Source it in your `.tmux.conf`:
 
