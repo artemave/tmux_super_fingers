@@ -6,6 +6,9 @@ name: Tmux Super Fingers
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'tmux_super_fingers.tmux'
   pull_request:
     branches: [ main ]
 
