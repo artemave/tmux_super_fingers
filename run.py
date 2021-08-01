@@ -1,42 +1,30 @@
 #!/usr/bin/env python3
 
-import curses
-import os
-from curses import ascii, wrapper
+from curses import ascii, wrapper, window
 from typing import List
 
 from tmux_super_fingers.mark import Highlight, Mark
 from tmux_super_fingers.pane import Pane
 from tmux_super_fingers.utils import flatten
+from tmux_super_fingers.ui import UI
 
 
-def render_pane_text(stdscr: curses.window, pane: Pane) -> None:
+def render_pane_text(ui: UI, pane: Pane) -> None:
     if pane.top > 0:
         pane_width = pane.right - pane.left + 1
-        render_line(stdscr, pane.top - 1, pane.left, '─' * pane_width, curses.A_DIM)
+        ui.render_line(pane.top - 1, pane.left, '─' * pane_width, ui.DIM)
 
     if pane.left > 0:
         pane_height = pane.bottom - pane.top + 1
         for ln in range(pane_height):
-            render_line(stdscr, pane.top + ln, pane.left - 1, '│', curses.A_DIM)
+            ui.render_line(pane.top + ln, pane.left - 1, '│', ui.DIM)
 
     lines = pane.text.split('\n')
     for ln, line in enumerate(lines):
-        render_line(stdscr, pane.top + ln, pane.left, line, curses.A_DIM)
-
-# Workaround for:
-# https://stackoverflow.com/questions/7063128/last-character-of-a-window-in-python-curses
+        ui.render_line(pane.top + ln, pane.left, line, ui.DIM)
 
 
-def render_line(stdscr: curses.window, y: int, x: int, line: str, color: int) -> None:
-    try:
-        stdscr.addstr(y, x, line, color)
-    except curses.error:
-        stdscr.addstr(y, x, line[-1], color)
-        stdscr.insstr(y, x, line[:-1], color)
-
-
-def overlay_marks(stdscr: curses.window, pane: Pane) -> None:
+def overlay_marks(ui: UI, pane: Pane) -> None:
     running_character_total = 0
     wrapped_mark_tail = None
 
@@ -67,23 +55,21 @@ def overlay_marks(stdscr: curses.window, pane: Pane) -> None:
             else:
                 wrapped_mark_tail = None
 
-            render_line(
-                stdscr,
+            ui.render_line(
                 pane.top + ln,
                 pane.left + mark_line_start,
                 text,
-                curses.A_BOLD
+                ui.BOLD
             )
 
             if isinstance(highlight, Mark):
                 mark = highlight
                 if mark.hint:
-                    render_line(
-                        stdscr,
+                    ui.render_line(
                         pane.top + ln,
                         pane.left + mark_line_start,
                         mark.hint,
-                        curses.color_pair(1) | curses.A_BOLD
+                        ui.BLACK_ON_CYAN | ui.BOLD
                     )
 
 
@@ -112,11 +98,8 @@ def number_to_hint(number: int) -> str:
     return letter
 
 
-def main(stdscr: curses.window) -> None:
-    # To inherit window background
-    curses.use_default_colors()
-    curses.curs_set(False)
-    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
+def main(stdscr: window) -> None:
+    ui = UI(stdscr)
 
     panes: List[Pane] = Pane.get_current_window_panes()
 
@@ -134,12 +117,12 @@ def main(stdscr: curses.window) -> None:
             break
 
         for pane in panes:
-            render_pane_text(stdscr, pane)
-            overlay_marks(stdscr, pane)
+            render_pane_text(ui, pane)
+            overlay_marks(ui, pane)
 
-        stdscr.refresh()
+        ui.refresh()
 
-        char = stdscr.getch()
+        char = ui.getch()
 
         if char == ascii.ESC:
             break
@@ -154,7 +137,4 @@ def main(stdscr: curses.window) -> None:
             hint += chr(char)
 
 
-os.environ.setdefault('ESCDELAY', '25')
 wrapper(main)
-# panes = list(map(get_pane_marks, get_panes()))
-# print({'panes': panes})
