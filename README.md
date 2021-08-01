@@ -1,7 +1,8 @@
 # Tmux Super Fingers [![Tmux Super Fingers](https://github.com/artemave/tmux_super_fingers/actions/workflows/python-app.yml/badge.svg)](https://github.com/artemave/tmux_super_fingers/actions/workflows/python-app.yml)
 
-
+<p align="center">
 <img width="300" src="https://78.media.tumblr.com/e1712952f6eb24f418a997a8da6ae831/tumblr_ou1znif6LW1w4t58uo1_500.gif" />
+</p>
 
 A tmux "mode" that allows you to open file links in an `$EDITOR`, urls in the browser and more.
 
