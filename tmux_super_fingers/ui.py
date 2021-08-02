@@ -5,6 +5,7 @@ import curses
 class UI:
     """Curses adapter"""
 
+    # Make escape delay unnoticable (it is very noticable by default)
     os.environ.setdefault('ESCDELAY', '25')
 
     BOLD: int = curses.A_BOLD

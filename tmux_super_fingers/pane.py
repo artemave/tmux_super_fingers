@@ -9,11 +9,6 @@ from .utils import shell, strip
 from .pane_props import PaneProps
 
 
-def _get_tmux_pane_cwd(pane_tty: str) -> str:
-    pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
-    return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
-
-
 @dataclass
 class Pane:
     unwrapped_text: str
@@ -23,36 +18,6 @@ class Pane:
     right: int
     top: int
     bottom: int
-
-    @classmethod
-    def get_current_window_panes(cls) -> List[Pane]:
-        panes_props: List[PaneProps] = PaneProps.current_window_panes_props()
-
-        panes = map(cls._create_pane_from_props, panes_props)
-
-        return list(panes)
-
-    @classmethod
-    def _create_pane_from_props(cls, pane_props: PaneProps) -> Pane:
-        vertical_offset = 0
-        if len(pane_props.scroll_position) > 0:
-            vertical_offset = int(pane_props.scroll_position)
-
-        pane_bottom = int(pane_props.pane_bottom)
-        start = -vertical_offset
-        end = pane_bottom - vertical_offset
-
-        return cls(
-            unwrapped_text=strip(
-                shell(f'tmux capture-pane -p -S {start} -E {end} -J -t {pane_props.pane_id}')
-            ),
-            text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -t {pane_props.pane_id}')),
-            current_path=_get_tmux_pane_cwd(pane_props.pane_tty),
-            left=int(pane_props.pane_left),
-            right=int(pane_props.pane_right),
-            top=int(pane_props.pane_top),
-            bottom=pane_bottom,
-        )
 
     @cached_property
     def marks(self) -> List[Mark]:
@@ -77,9 +42,44 @@ class Pane:
         return _unique_sorted_marks(pane_marks)
 
 
+def get_current_window_panes() -> List[Pane]:
+    panes_props: List[PaneProps] = PaneProps.current_window_panes_props()
+
+    panes = map(_create_pane_from_props, panes_props)
+
+    return list(panes)
+
+
+def _create_pane_from_props(pane_props: PaneProps) -> Pane:
+    vertical_offset = 0
+    if len(pane_props.scroll_position) > 0:
+        vertical_offset = int(pane_props.scroll_position)
+
+    pane_bottom = int(pane_props.pane_bottom)
+    start = -vertical_offset
+    end = pane_bottom - vertical_offset
+
+    return Pane(
+        unwrapped_text=strip(
+            shell(f'tmux capture-pane -p -S {start} -E {end} -J -t {pane_props.pane_id}')
+        ),
+        text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -t {pane_props.pane_id}')),
+        current_path=_get_tmux_pane_cwd(pane_props.pane_tty),
+        left=int(pane_props.pane_left),
+        right=int(pane_props.pane_right),
+        top=int(pane_props.pane_top),
+        bottom=pane_bottom,
+    )
+
+
 def _unique_sorted_marks(marks: List[Mark]) -> List[Mark]:
     index: Dict[str, Mark] = {}
     for mark in marks:
         index[mark.text] = mark
 
     return sorted(index.values(), key=lambda m: m.start)
+
+
+def _get_tmux_pane_cwd(pane_tty: str) -> str:
+    pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
+    return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
