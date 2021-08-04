@@ -1,7 +1,7 @@
 import os
 from ..mark import Mark
 from ..targets import TextFileTarget
-from .test_utils import assert_marks
+from ..test_utils import assert_marks
 
 
 def test_finds_relative_file(change_test_dir: str):

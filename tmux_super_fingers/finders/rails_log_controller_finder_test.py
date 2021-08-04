@@ -2,7 +2,7 @@ import os
 
 from ..targets import TextFileTarget
 from ..mark import Mark
-from .test_utils import assert_marks
+from ..test_utils import assert_marks
 
 """
 Example rails log:

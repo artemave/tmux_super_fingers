@@ -1,6 +1,6 @@
 from ..mark import Mark
 from ..targets import UrlTarget
-from .test_utils import create_pane
+from ..test_utils import create_pane
 
 
 def test_finds_url():

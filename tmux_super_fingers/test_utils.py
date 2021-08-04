@@ -1,7 +1,7 @@
 import os
 from typing import Dict, Any, List
-from ..pane import Pane
-from ..mark import Mark
+from .pane import Pane
+from .mark import Mark
 
 
 ORDERS_CONTROLLER = """
@@ -16,6 +16,7 @@ end
 def create_pane(pane_obj: Dict[str, Any]) -> Pane:
     pane: Dict[str, Any] = {
         'text': 'some text',
+        'unwrapped_text': 'some text',
         'current_path': os.getcwd(),
         'left': 0,
         'right': 0,
