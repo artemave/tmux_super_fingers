@@ -23,10 +23,10 @@ class PanesRenderer:
         user_input = ''
 
         while True:
-            panes = self._discard_marks_that_dont_match_user_input(user_input)
+            panes = _discard_marks_that_dont_match_user_input(deepcopy(self.panes), user_input)
 
             if user_input:
-                chosen_mark = self._the_only_mark_left(panes)
+                chosen_mark = _the_only_mark_left(panes)
 
                 if chosen_mark:
                     chosen_mark.perform_primary_action()
@@ -59,24 +59,6 @@ class PanesRenderer:
             user_input += chr(char)
 
         return user_input
-
-    def _the_only_mark_left(self, panes: List[Pane]) -> Optional[Mark]:
-        marks_left = flatten([
-            [m for m in p.marks] for p in panes
-        ])
-
-        if len(marks_left) == 1:
-            return marks_left[0]
-
-    def _discard_marks_that_dont_match_user_input(self, user_input: str) -> List[Pane]:
-        panes = deepcopy(self.panes)
-
-        for pane in panes:
-            pane.marks = [
-                m for m in pane.marks if m.hint and m.hint.startswith(user_input)
-            ]
-
-        return panes
 
     def _render_top_border(self, pane: Pane) -> None:
         pane_width = pane.right - pane.left + 1
@@ -136,3 +118,21 @@ def _get_highlights(pane: Pane) -> Generator[tuple[int, int, Highlight], None, N
                 yield (line_end, line_top + 1, wrapped_mark_tail)
             else:
                 yield (line_start, line_top, mark)
+
+
+def _discard_marks_that_dont_match_user_input(panes: List[Pane], user_input: str) -> List[Pane]:
+    for pane in panes:
+        pane.marks = [
+            m for m in pane.marks if m.hint and m.hint.startswith(user_input)
+        ]
+
+    return panes
+
+
+def _the_only_mark_left(panes: List[Pane]) -> Optional[Mark]:
+    marks_left = flatten([
+        [m for m in p.marks] for p in panes
+    ])
+
+    if len(marks_left) == 1:
+        return marks_left[0]
