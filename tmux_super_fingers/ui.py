@@ -1,12 +1,27 @@
-import os
 import curses
+from abc import ABCMeta, abstractmethod
 
 
-class UI:
+class UI(metaclass=ABCMeta):
+    BOLD = 101
+    DIM = 102
+    BLACK_ON_CYAN = 103
+
+    @abstractmethod
+    def render_line(self, y: int, x: int, line: str, color: int) -> None:
+        ...
+
+    @abstractmethod
+    def refresh(self) -> None:
+        ...
+
+    @abstractmethod
+    def getch(self) -> int:
+        ...
+
+
+class CursesUI(UI):
     """Curses adapter"""
-
-    # Make escape delay unnoticable (it is very noticable by default)
-    os.environ.setdefault('ESCDELAY', '25')
 
     BOLD: int = curses.A_BOLD
     DIM: int = curses.A_DIM
