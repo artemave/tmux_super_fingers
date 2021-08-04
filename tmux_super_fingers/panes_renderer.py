@@ -113,7 +113,6 @@ class PanesRenderer:
 
 def _get_highlights(pane: Pane) -> Generator[tuple[int, int, Highlight], None, None]:
     running_character_total = 0
-    wrapped_mark_tail = None
 
     for ln, line in enumerate(pane.text.split('\n')):
         line_start = running_character_total
@@ -121,27 +120,19 @@ def _get_highlights(pane: Pane) -> Generator[tuple[int, int, Highlight], None, N
         line_end = running_character_total
         line_top = pane.top + ln
 
-        highlights_that_start_on_current_line: List[Highlight] = [
+        marks_that_start_on_current_line: List[Highlight] = [
             m for m in pane.marks if line_end > m.start >= line_start
         ]
 
-        if wrapped_mark_tail:
-            highlights_that_start_on_current_line = [
-                wrapped_mark_tail] + highlights_that_start_on_current_line
+        for mark in marks_that_start_on_current_line:
+            if mark.end > line_end:
+                tail_length = mark.end - line_end
+                tail_text = mark.text[-tail_length:]
 
-        for highlight in highlights_that_start_on_current_line:
-            text = highlight.text
+                mark.text = mark.text[:-tail_length]
+                yield (line_start, line_top, mark)
 
-            if highlight.end > line_end:
-                tail_length = highlight.end - line_end
-                wrapped_mark_tail = Highlight(
-                    text=text[-tail_length:],
-                    start=line_end,
-                )
-                yield (line_start, line_top, Highlight(
-                    start=highlight.start,
-                    text=text[:-tail_length]
-                ))
+                wrapped_mark_tail = Highlight(text=tail_text, start=line_end)
+                yield (line_end, line_top + 1, wrapped_mark_tail)
             else:
-                wrapped_mark_tail = None
-                yield (line_start, line_top, highlight)
+                yield (line_start, line_top, mark)
