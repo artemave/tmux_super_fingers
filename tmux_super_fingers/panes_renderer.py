@@ -1,5 +1,4 @@
-import re
-from typing import List, Optional
+from typing import List, Optional, Generator
 from copy import deepcopy
 from curses import ascii
 
@@ -100,43 +99,49 @@ class PanesRenderer:
             self.ui.render_line(pane.top + ln, pane.left, line, self.ui.DIM)
 
     def _overlay_marks(self, pane: Pane, user_input: str) -> None:
-        running_character_total = 0
-        wrapped_mark_tail = None
+        for line_start, line_top, highlight in _get_highlights(pane):
+            mark_left = pane.left + highlight.start - line_start
+            self.ui.render_line(line_top, mark_left, highlight.text, self.ui.BOLD)
 
-        for ln, line in enumerate(pane.text.split('\n')):
-            line_start = running_character_total
-            running_character_total += len(line)
-            line_end = running_character_total
+            if isinstance(highlight, Mark) and highlight.hint:
+                hint_left = mark_left + len(user_input)
+                hint = highlight.hint[len(user_input):]
 
-            highlights_that_start_on_current_line: List[Highlight] = [
-                m for m in pane.marks if line_end > m.start >= line_start
-            ]
+                color = self.ui.BLACK_ON_CYAN | self.ui.BOLD
+                self.ui.render_line(line_top, hint_left, hint, color)
 
-            if wrapped_mark_tail:
-                highlights_that_start_on_current_line = [
-                    wrapped_mark_tail] + highlights_that_start_on_current_line
 
-            for highlight in highlights_that_start_on_current_line:
-                mark_left = pane.left + highlight.start - line_start
-                mark_top = pane.top + ln
+def _get_highlights(pane: Pane) -> Generator[tuple[int, int, Highlight], None, None]:
+    running_character_total = 0
+    wrapped_mark_tail = None
 
-                text = highlight.text
+    for ln, line in enumerate(pane.text.split('\n')):
+        line_start = running_character_total
+        running_character_total += len(line)
+        line_end = running_character_total
+        line_top = pane.top + ln
 
-                if highlight.end > line_end:
-                    tail_length = highlight.end - line_end
-                    wrapped_mark_tail = Highlight(
-                        text=text[-tail_length:],
-                        start=line_end,
-                    )
-                    text = text[:-tail_length]
-                else:
-                    wrapped_mark_tail = None
+        highlights_that_start_on_current_line: List[Highlight] = [
+            m for m in pane.marks if line_end > m.start >= line_start
+        ]
 
-                self.ui.render_line(mark_top, mark_left, text, self.ui.BOLD)
+        if wrapped_mark_tail:
+            highlights_that_start_on_current_line = [
+                wrapped_mark_tail] + highlights_that_start_on_current_line
 
-                if isinstance(highlight, Mark) and highlight.hint:
-                    hint_left = mark_left + len(user_input)
-                    hint = highlight.hint[len(user_input):]
+        for highlight in highlights_that_start_on_current_line:
+            text = highlight.text
 
-                    color = self.ui.BLACK_ON_CYAN | self.ui.BOLD
-                    self.ui.render_line(mark_top, hint_left, hint, color)
+            if highlight.end > line_end:
+                tail_length = highlight.end - line_end
+                wrapped_mark_tail = Highlight(
+                    text=text[-tail_length:],
+                    start=line_end,
+                )
+                yield (line_start, line_top, Highlight(
+                    start=highlight.start,
+                    text=text[:-tail_length]
+                ))
+            else:
+                wrapped_mark_tail = None
+                yield (line_start, line_top, highlight)
