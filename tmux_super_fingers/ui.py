@@ -12,10 +12,6 @@ class UI(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    def refresh(self) -> None:
-        ...
-
-    @abstractmethod
     def getch(self) -> int:
         ...
 
@@ -47,7 +43,7 @@ class CursesUI(UI):
             self.window.addstr(y, x, line[-1], color)
             self.window.insstr(y, x, line[:-1], color)
 
-    def refresh(self) -> None:
+        # Refreshing after each render does not seem to affect performance
         self.window.refresh()
 
     def getch(self) -> int:

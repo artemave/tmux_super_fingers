@@ -13,9 +13,6 @@ class MockUI(UI):
     def render_line(self, y: int, x: int, line: str, color: int) -> None:
         self.calls.append(['render_line', y, x, line, color])
 
-    def refresh(self) -> None:
-        self.calls.append(['refresh'])
-
     def getch(self) -> int:
         return self.user_input.pop(0)
 
@@ -31,5 +28,4 @@ def test_draws_single_pane_with_no_marks_and_exits_on_backspace():
     assert ui.calls == [
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
-        ['refresh'],
     ]

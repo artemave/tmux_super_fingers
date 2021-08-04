@@ -36,8 +36,6 @@ class PanesRenderer:
                 self._render_pane_text(pane)
                 self._overlay_marks(pane, user_input)
 
-            self.ui.refresh()
-
             try:
                 user_input = self._handle_user_input(user_input)
             except BreakTheLoop:
