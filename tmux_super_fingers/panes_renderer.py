@@ -117,7 +117,9 @@ class PanesRenderer:
                     wrapped_mark_tail] + highlights_that_start_on_current_line
 
             for highlight in highlights_that_start_on_current_line:
-                mark_line_start = highlight.start - line_start
+                mark_left = pane.left + highlight.start - line_start
+                mark_top = pane.top + ln
+
                 text = highlight.text
 
                 if highlight.end > line_end:
@@ -130,22 +132,11 @@ class PanesRenderer:
                 else:
                     wrapped_mark_tail = None
 
-                self.ui.render_line(
-                    pane.top + ln,
-                    pane.left + mark_line_start,
-                    text,
-                    self.ui.BOLD
-                )
+                self.ui.render_line(mark_top, mark_left, text, self.ui.BOLD)
 
-                if isinstance(highlight, Mark):
-                    mark = highlight
-                    if mark.hint:
-                        hint = re.sub(f'^{user_input}', '', mark.hint)
+                if isinstance(highlight, Mark) and highlight.hint:
+                    hint_left = mark_left + len(user_input)
+                    hint = highlight.hint[len(user_input):]
 
-                        if hint:
-                            self.ui.render_line(
-                                pane.top + ln,
-                                pane.left + mark_line_start + len(user_input),
-                                hint,
-                                self.ui.BLACK_ON_CYAN | self.ui.BOLD
-                            )
+                    color = self.ui.BLACK_ON_CYAN | self.ui.BOLD
+                    self.ui.render_line(mark_top, hint_left, hint, color)
