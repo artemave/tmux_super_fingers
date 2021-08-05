@@ -12,6 +12,7 @@ autoimport = "*"
 isort = "*"
 autopep8 = "*"
 flake8 = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.9"

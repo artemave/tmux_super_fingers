@@ -4,3 +4,5 @@ test/__pycache__/
 __init__.spec
 node_modules
 test.py
+.coverage
+htmlcov

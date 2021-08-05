@@ -47,10 +47,10 @@ jobs:
       run: yarn install
 
     - name: Run type checking
-      run: pipenv run yarn run pyright
+      run: make pyright
 
     - name: Lint
-      run: pipenv run flake8
+      run: make flake8
 
     - name: Test
-      run: pipenv run pytest
+      run: make cov
