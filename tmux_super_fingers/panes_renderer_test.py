@@ -116,7 +116,7 @@ def test_hides_marks_that_dont_match_user_input():
         ['render_line', 1, 3, 'e 2', ui.BOLD],
         ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN],
 
-        # user pressed '1'
+        # user pressed '1' - less hints are rendered
         ['getch', 49],
 
         ['render_line', 0, 0, 'line 1', ui.DIM],
@@ -127,6 +127,66 @@ def test_hides_marks_that_dont_match_user_input():
 
         ['render_line', 0, 3, 'e 1', ui.BOLD],
         ['render_line', 0, 4, 'b', ui.BLACK_ON_CYAN],
+
+        ['getch', ascii.ESC]
+    ]
+    assert mock_target.calls == []
+
+
+def test_shows_back_hidden_marks_when_on_backspace():
+    ui = MockUI(user_input=[49, 127, ascii.ESC])
+    mock_target = MockTarget()
+
+    pane = create_pane({'text': 'line 1\nline 2'})
+    pane.marks = [
+        Mark(start=0, text='li', target=mock_target, hint='1a'),
+        Mark(start=3, text='e 1', target=mock_target, hint='1b'),
+        Mark(start=9, text='e 2', target=mock_target, hint='c'),
+    ]
+    panes_renderer = PanesRenderer(ui, [pane])
+
+    panes_renderer.loop()
+
+    assert ui.calls == [
+        # initial render
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+
+        ['render_line', 0, 0, 'li', ui.BOLD],
+        ['render_line', 0, 0, '1a', ui.BLACK_ON_CYAN],
+
+        ['render_line', 0, 3, 'e 1', ui.BOLD],
+        ['render_line', 0, 3, '1b', ui.BLACK_ON_CYAN],
+
+        ['render_line', 1, 3, 'e 2', ui.BOLD],
+        ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN],
+
+        # user pressed '1' - less hints are rendered
+        ['getch', 49],
+
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+
+        ['render_line', 0, 0, 'li', ui.BOLD],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+
+        ['render_line', 0, 3, 'e 1', ui.BOLD],
+        ['render_line', 0, 4, 'b', ui.BLACK_ON_CYAN],
+
+        # user pressed backspace - back to the original
+        ['getch', 127],
+
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+
+        ['render_line', 0, 0, 'li', ui.BOLD],
+        ['render_line', 0, 0, '1a', ui.BLACK_ON_CYAN],
+
+        ['render_line', 0, 3, 'e 1', ui.BOLD],
+        ['render_line', 0, 3, '1b', ui.BLACK_ON_CYAN],
+
+        ['render_line', 1, 3, 'e 2', ui.BOLD],
+        ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN],
 
         ['getch', ascii.ESC]
     ]
