@@ -16,7 +16,7 @@ class UI(metaclass=ABCMeta):
         ...
 
 
-class CursesUI(UI):
+class CursesUI(UI):  # pragma: no cover
     """Curses adapter"""
 
     BOLD: int = curses.A_BOLD
