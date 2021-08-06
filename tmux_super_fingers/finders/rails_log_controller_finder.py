@@ -2,7 +2,7 @@ import re
 import os
 from typing import Optional, Pattern, Match
 from ..mark import Mark
-from ..targets import TextFileTarget
+from ..targets.text_file_target import TextFileTarget
 from ..utils import camel_to_snake
 from .finder import BaseFinder
 

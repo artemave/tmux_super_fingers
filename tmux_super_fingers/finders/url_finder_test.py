@@ -1,5 +1,5 @@
 from ..mark import Mark
-from ..targets import UrlTarget
+from ..targets.url_target import UrlTarget
 from ..test_utils import create_pane
 
 

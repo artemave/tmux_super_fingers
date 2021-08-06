@@ -2,7 +2,7 @@ import re
 from .finder import BaseFinder
 from typing import Optional, Pattern, Match
 from ..mark import Mark
-from ..targets import UrlTarget
+from ..targets.url_target import UrlTarget
 
 
 class UrlFinder(BaseFinder):

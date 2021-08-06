@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
-from ..targets import Target
+from ..targets.target import Target
 
 
 @dataclass

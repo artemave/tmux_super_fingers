@@ -11,3 +11,6 @@ cov:
 
 hcov:
 	pipenv run pytest --cov tmux_super_fingers --cov-branch --cov-report=html
+
+test:
+	pipenv run pytest

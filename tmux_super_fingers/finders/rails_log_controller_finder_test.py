@@ -1,6 +1,6 @@
 import os
 
-from ..targets import TextFileTarget
+from ..targets.text_file_target import TextFileTarget
 from ..mark import Mark
 from ..test_utils import assert_marks
 

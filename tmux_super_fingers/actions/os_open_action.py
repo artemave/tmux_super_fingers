@@ -1,7 +1,7 @@
 import sys
 from ..utils import shell
 from .action import Action
-from ..targets import OsOpenable
+from ..targets.os_openable import OsOpenable
 
 
 class OsOpenAction(Action):

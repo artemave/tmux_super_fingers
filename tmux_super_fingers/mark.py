@@ -1,7 +1,6 @@
 from typing import Optional
 from dataclasses import dataclass
-from .targets import Target
-from .actions import action_for_target_type
+from .targets.target import Target
 
 
 @dataclass
@@ -20,5 +19,4 @@ class Mark(Highlight):
     hint: Optional[str] = None
 
     def perform_primary_action(self):
-        action_type = action_for_target_type(type(self.target))
-        action_type(self.target).perform()
+        self.target.perform_primary_action()

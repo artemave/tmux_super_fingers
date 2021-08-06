@@ -3,7 +3,7 @@ import re
 from typing import Match, Optional, Pattern
 
 from ..mark import Mark
-from ..targets import TextFileTarget
+from ..targets.text_file_target import TextFileTarget
 from .finder import BaseFinder
 
 

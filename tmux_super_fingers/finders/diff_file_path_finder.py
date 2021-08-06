@@ -3,7 +3,7 @@ from os import path
 from .finder import BaseFinder
 from typing import Optional, Pattern, Match
 from ..mark import Mark
-from ..targets import TextFileTarget
+from ..targets.text_file_target import TextFileTarget
 
 
 class DiffFilePathFinder(BaseFinder):

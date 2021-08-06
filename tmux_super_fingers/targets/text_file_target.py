@@ -1,21 +1,18 @@
-from dataclasses import dataclass
-from typing import Optional
+import os
+import re
 from .os_openable import OsOpenable
-from .target import Target
+from .editor_openable import EditorOpenable
+from ..actions.send_to_vim_in_tmux_pane_action import SendToVimInTmuxPaneAction
+from ..actions.os_open_action import OsOpenAction
 
 
-@dataclass
-class _TextFileTarget(Target):
-    file_path: str
-    line_number: Optional[int] = None
-
+class TextFileTarget(OsOpenable, EditorOpenable):
     @property
     def file_or_url(self) -> str:
         return self.file_path
 
-
-class TextFileTarget(_TextFileTarget, OsOpenable):
-    pass
-
-# TODO: interface for "openable in tmux vim"
-# For fancy things like zip archives that can also be sent to vim
+    def perform_primary_action(self) -> None:
+        if re.search('^n?vim', os.environ['EDITOR']):
+            SendToVimInTmuxPaneAction(self).perform()
+        else:
+            OsOpenAction(self).perform()

@@ -3,7 +3,7 @@ from .action import Action
 import os
 from typing import Optional
 from ..utils import shell
-from ..targets import TextFileTarget
+from ..targets.editor_openable import EditorOpenable
 from ..pane_props import PaneProps
 
 # emacs go to line number:
@@ -11,7 +11,7 @@ from ..pane_props import PaneProps
 
 
 class SendToVimInTmuxPaneAction(Action):
-    target: TextFileTarget
+    target: EditorOpenable
 
     def perform(self) -> None:
         vim_pane_id = self._find_editor_pane_id()
