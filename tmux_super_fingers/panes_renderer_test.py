@@ -191,3 +191,29 @@ def test_shows_back_hidden_marks_when_on_backspace():
         ['getch', ascii.ESC]
     ]
     assert mock_target.calls == []
+
+
+def test_multiline_mark():
+    ui = MockUI(user_input=[97])
+    mock_target = MockTarget()
+
+    pane = create_pane({'text': 'line 1\nline 2'})
+    pane.marks = [Mark(
+        start=4,
+        text='stuff',
+        target=mock_target,
+        hint='a'
+    )]
+    panes_renderer = PanesRenderer(ui, [pane])
+
+    panes_renderer.loop()
+
+    assert ui.calls == [
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+        ['render_line', 0, 4, 'st', ui.BOLD],
+        ['render_line', 0, 4, 'a', ui.BLACK_ON_CYAN],
+        ['render_line', 1, 0, 'uff', ui.BOLD],
+        ['getch', 97],
+    ]
+    assert mock_target.calls == [['perform_primary_action']]
