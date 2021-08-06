@@ -217,3 +217,64 @@ def test_multiline_mark():
         ['getch', 97],
     ]
     assert mock_target.calls == [['perform_primary_action']]
+
+
+def test_multiple_panes():
+    ui = MockUI(user_input=[ascii.ESC])
+    """
+    tmux pane border is one character wide
+    ┌─────────────────┬────────────────┐
+    │0,0              │ 0,10           │
+    │                 │                │
+    │        1        │        2       │
+    │                 │                │
+    ├─────────────────┴────────────────┤
+    │5,0                               │
+    │                                  │
+    │                 3                │
+    │                                  │
+    └──────────────────────────────────┘
+    """
+    pane1 = create_pane({
+        'top': 0,
+        'left': 0,
+        'right': 8,
+        'bottom': 3,
+        'text': 'line 1\nline 2'
+    })
+    pane2 = create_pane({
+        'top': 0,
+        'left': 10,
+        'right': 20,
+        'bottom': 3,
+        'text': 'line 3\nline 4'
+    })
+    pane3 = create_pane({
+        'top': 5,
+        'left': 0,
+        'right': 19,
+        'bottom': 10,
+        'text': 'line 5\nline 6'
+    })
+
+    panes_renderer = PanesRenderer(ui, [pane1, pane2, pane3])
+
+    panes_renderer.loop()
+
+    assert ui.calls == [
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+
+        ['render_line', 0, 9, '│', ui.DIM],
+        ['render_line', 1, 9, '│', ui.DIM],
+        ['render_line', 2, 9, '│', ui.DIM],
+        ['render_line', 3, 9, '│', ui.DIM],
+        ['render_line', 0, 10, 'line 3', ui.DIM],
+        ['render_line', 1, 10, 'line 4', ui.DIM],
+
+        ['render_line', 4, 0, '─' * 20, ui.DIM],
+        ['render_line', 5, 0, 'line 5', ui.DIM],
+        ['render_line', 6, 0, 'line 6', ui.DIM],
+
+        ['getch', ascii.ESC]
+    ]
