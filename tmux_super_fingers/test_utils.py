@@ -2,6 +2,7 @@ import os
 from typing import Dict, Any, List
 from .pane import Pane
 from .mark import Mark
+from .pane_props import PaneProps
 
 
 ORDERS_CONTROLLER = """
@@ -25,6 +26,20 @@ def create_pane(pane_obj: Dict[str, Any]) -> Pane:
     }
     pane.update(pane_obj)
     return Pane(**pane)
+
+
+def create_pane_props(obj: Dict[str, str]) -> PaneProps:
+    panes_props = {
+        'pane_id': '1',
+        'pane_tty': '/dev/tty/9',
+        'pane_left': '0',
+        'pane_right': '0',
+        'pane_top': '0',
+        'pane_bottom': '0',
+        'scroll_position': '0'
+    }
+    panes_props.update(obj)
+    return PaneProps(**panes_props)
 
 
 def write_file(path: str, content: str) -> None:
