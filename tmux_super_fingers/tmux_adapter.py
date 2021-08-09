@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Optional
+from typing import Optional, List
 import re
 import os
 
@@ -24,10 +24,24 @@ class TmuxAdapter(metaclass=ABCMeta):
     def new_window(self, name: str, command: str) -> None:
         ...
 
+    @abstractmethod
+    def session_panes_props(self) -> List[PaneProps]:
+        ...
+
+    @abstractmethod
+    def current_window_panes_props(self) -> List[PaneProps]:
+        ...
+
 
 class RealTmuxAdapter(TmuxAdapter):
+    def session_panes_props(self) -> List[PaneProps]:
+        return _get_panes_props('-s')
+
+    def current_window_panes_props(self) -> List[PaneProps]:
+        return _get_panes_props('-t !')
+
     def find_pane_with_running_process(self, command: str) -> Optional[PaneProps]:
-        session_panes_props = PaneProps.session_panes_props()
+        session_panes_props = self.session_panes_props()
 
         tty_list = [pane_props.pane_tty for pane_props in session_panes_props]
 
@@ -52,3 +66,29 @@ class RealTmuxAdapter(TmuxAdapter):
 
     def new_window(self, name: str, command: str) -> None:
         os.system(f'tmux new-window -n {name} {command}')
+
+
+def _get_panes_props(tmux_target: str) -> List[PaneProps]:
+    props: List[str] = shell(
+        'tmux list-panes ' + tmux_target + ' -F #{pane_id},#{pane_tty},#{pane_left},'
+        '#{pane_right},#{pane_top},#{pane_bottom},#{scroll_position}'
+    ).split('\n')
+
+    panes_props = map(_create_pane_props, props)
+
+    return list(panes_props)
+
+
+def _create_pane_props(props: str) -> PaneProps:
+    pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom, scroll_position = \
+            props.split(',')
+
+    return PaneProps(
+        pane_id=pane_id,
+        pane_tty=pane_tty,
+        pane_left=pane_left,
+        pane_right=pane_right,
+        pane_top=pane_top,
+        pane_bottom=pane_bottom,
+        scroll_position=scroll_position
+    )

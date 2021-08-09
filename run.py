@@ -3,16 +3,17 @@
 import os
 from curses import wrapper, window
 
-from tmux_super_fingers.pane import get_current_window_panes
+from tmux_super_fingers.current_window import CurrentWindow
 from tmux_super_fingers.ui import CursesUI
 from tmux_super_fingers.panes_renderer import PanesRenderer
+from tmux_super_fingers.tmux_adapter import RealTmuxAdapter
 
 
 def main(stdscr: window) -> None:
     ui = CursesUI(stdscr)
-    panes = get_current_window_panes()
+    current_window = CurrentWindow(RealTmuxAdapter())
 
-    renderer = PanesRenderer(ui, panes)
+    renderer = PanesRenderer(ui, current_window.panes)
     renderer.loop()
 
 

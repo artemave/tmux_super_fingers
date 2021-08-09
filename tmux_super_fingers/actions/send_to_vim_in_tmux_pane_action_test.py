@@ -25,6 +25,12 @@ class MockTmuxAdapter(TmuxAdapter):
     def send_keys(self, id: str, keys: str) -> None:
         self.calls.append(['send_keys', id, keys])
 
+    def session_panes_props(self) -> List[PaneProps]:
+        ...
+
+    def current_window_panes_props(self) -> List[PaneProps]:
+        ...
+
 
 def test_sends_keys_to_new_window_running_vim(monkeypatch: MonkeyPatch):
     monkeypatch.setenv('EDITOR', 'vim')
