@@ -31,6 +31,12 @@ class MockTmuxAdapter(TmuxAdapter):
     def current_window_panes_props(self) -> List[PaneProps]:
         ...
 
+    def capture_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
+        ...
+
+    def get_pane_cwd(self, pane_tty: str) -> str:
+        ...
+
 
 def test_sends_keys_to_new_window_running_vim(monkeypatch: MonkeyPatch):
     monkeypatch.setenv('EDITOR', 'vim')

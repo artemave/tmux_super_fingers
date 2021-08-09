@@ -4,7 +4,6 @@ from functools import cached_property
 from .pane_props import PaneProps
 from .pane import Pane
 from .tmux_adapter import TmuxAdapter
-from .utils import strip, shell
 
 
 class CurrentWindow:
@@ -33,11 +32,9 @@ class CurrentWindow:
         end = pane_bottom - vertical_offset
 
         return Pane(
-            unwrapped_text=strip(
-                shell(f'tmux capture-pane -p -S {start} -E {end} -J -t {pane_props.pane_id}')
-            ),
-            text=strip(shell(f'tmux capture-pane -p -S {start} -E {end} -t {pane_props.pane_id}')),
-            current_path=_get_tmux_pane_cwd(pane_props.pane_tty),
+            unwrapped_text=self.tmux_adapter.capture_viewport(pane_props.pane_id, start, end, unwrapped=True),
+            text=self.tmux_adapter.capture_viewport(pane_props.pane_id, start, end),
+            current_path=self.tmux_adapter.get_pane_cwd(pane_props.pane_tty),
             left=int(pane_props.pane_left),
             right=int(pane_props.pane_right),
             top=int(pane_props.pane_top),
@@ -62,9 +59,3 @@ def _number_to_hint(number: int) -> str:
         return f'{prefix}{letter}'
 
     return letter
-
-
-# TODO: move to TmuxAdapter
-def _get_tmux_pane_cwd(pane_tty: str) -> str:
-    pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
-    return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]

@@ -4,7 +4,7 @@ import re
 import os
 
 from .pane_props import PaneProps
-from .utils import shell
+from .utils import shell, strip
 
 
 class TmuxAdapter(metaclass=ABCMeta):
@@ -32,14 +32,23 @@ class TmuxAdapter(metaclass=ABCMeta):
     def current_window_panes_props(self) -> List[PaneProps]:
         ...
 
+    @abstractmethod
+    def capture_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
+        ...
 
-class RealTmuxAdapter(TmuxAdapter):
+    @abstractmethod
+    def get_pane_cwd(self, pane_tty: str) -> str:
+        ...
+
+
+class RealTmuxAdapter(TmuxAdapter):  # pragma: no cover
     def session_panes_props(self) -> List[PaneProps]:
         return _get_panes_props('-s')
 
     def current_window_panes_props(self) -> List[PaneProps]:
         return _get_panes_props('-t !')
 
+    # TODO: there is too much logic here: extract into some testable code
     def find_pane_with_running_process(self, command: str) -> Optional[PaneProps]:
         session_panes_props = self.session_panes_props()
 
@@ -66,6 +75,16 @@ class RealTmuxAdapter(TmuxAdapter):
 
     def new_window(self, name: str, command: str) -> None:
         os.system(f'tmux new-window -n {name} {command}')
+
+    def capture_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
+        wrap_flag = '-J' if unwrapped else ''
+        return strip(
+            shell(f'tmux capture-pane -p -S {start} -E {end} {wrap_flag} -t {pane_id}')
+        )
+
+    def get_pane_cwd(self, pane_tty: str) -> str:
+        pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
+        return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
 
 
 def _get_panes_props(tmux_target: str) -> List[PaneProps]:
