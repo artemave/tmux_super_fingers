@@ -1,9 +1,11 @@
 import os
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from .pane import Pane
 from .mark import Mark
 from .pane_props import PaneProps
-
+from .tmux_adapter import TmuxAdapter
+from .targets.target import Target
+from .finders import MarkFinder
 
 ORDERS_CONTROLLER = """
 class OrdersController
@@ -14,6 +16,40 @@ end
 """
 
 
+class MockTarget(Target):
+    # This is class property, because targets get cloned at some point within the `loop()`
+    calls: List[List[Any]] = []
+
+    def perform_primary_action(self):
+        self.calls.append(['perform_primary_action'])
+
+
+class MockTmuxAdapterBase(TmuxAdapter):  # pragma: no cover
+    def __init__(self):
+        self.calls: List[List[Any]] = []
+
+    def find_pane_with_running_process(self, command: str) -> Optional[PaneProps]:
+        return None
+
+    def select_window(self, id: str) -> None:
+        self.calls.append(['select_window', id])
+
+    def new_window(self, name: str, command: str) -> None:
+        self.calls.append(['new_window', name, command])
+
+    def send_keys(self, id: str, keys: str) -> None:
+        self.calls.append(['send_keys', id, keys])
+
+    def current_window_panes_props(self) -> List[PaneProps]:
+        return []
+
+    def capture_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
+        return ''
+
+    def get_pane_cwd(self, pane_tty: str) -> str:
+        return ''
+
+
 def create_pane(pane_obj: Dict[str, Any]) -> Pane:
     pane: Dict[str, Any] = {
         'text': 'some text',
@@ -22,7 +58,8 @@ def create_pane(pane_obj: Dict[str, Any]) -> Pane:
         'left': 0,
         'right': 0,
         'top': 0,
-        'bottom': 0
+        'bottom': 0,
+        'mark_finder': MarkFinder(),
     }
     pane.update(pane_obj)
     return Pane(**pane)

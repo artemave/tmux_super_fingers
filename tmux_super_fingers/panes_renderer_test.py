@@ -1,19 +1,10 @@
 from curses import ascii
 from typing import List, Any
 
-from .test_utils import create_pane
+from .test_utils import create_pane, MockTarget
 from .panes_renderer import PanesRenderer
 from .ui import UI
-from .targets.target import Target
 from .mark import Mark
-
-
-class MockTarget(Target):
-    # This is class property, because targets get cloned at some point within the `loop()`
-    calls: List[List[Any]] = []
-
-    def perform_primary_action(self):
-        self.calls.append(['perform_primary_action'])
 
 
 def teardown_function():

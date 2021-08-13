@@ -7,7 +7,7 @@ from .pane_props import PaneProps
 from .utils import shell, strip
 
 
-class TmuxAdapter(metaclass=ABCMeta):
+class TmuxAdapter(metaclass=ABCMeta):  # pragma: no cover
     @abstractmethod
     def find_pane_with_running_process(self, command: str) -> Optional[PaneProps]:
         ...
@@ -25,10 +25,6 @@ class TmuxAdapter(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    def session_panes_props(self) -> List[PaneProps]:
-        ...
-
-    @abstractmethod
     def current_window_panes_props(self) -> List[PaneProps]:
         ...
 
@@ -42,15 +38,12 @@ class TmuxAdapter(metaclass=ABCMeta):
 
 
 class RealTmuxAdapter(TmuxAdapter):  # pragma: no cover
-    def session_panes_props(self) -> List[PaneProps]:
-        return _get_panes_props('-s')
-
     def current_window_panes_props(self) -> List[PaneProps]:
-        return _get_panes_props('-t !')
+        return self._get_panes_props('-t !')
 
     # TODO: there is too much logic here: extract into some testable code
     def find_pane_with_running_process(self, command: str) -> Optional[PaneProps]:
-        session_panes_props = self.session_panes_props()
+        session_panes_props = self._session_panes_props()
 
         tty_list = [pane_props.pane_tty for pane_props in session_panes_props]
 
@@ -86,28 +79,29 @@ class RealTmuxAdapter(TmuxAdapter):  # pragma: no cover
         pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
         return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
 
+    def _session_panes_props(self) -> List[PaneProps]:
+        return self._get_panes_props('-s')
 
-def _get_panes_props(tmux_target: str) -> List[PaneProps]:
-    props: List[str] = shell(
-        'tmux list-panes ' + tmux_target + ' -F #{pane_id},#{pane_tty},#{pane_left},'
-        '#{pane_right},#{pane_top},#{pane_bottom},#{scroll_position}'
-    ).split('\n')
+    def _get_panes_props(self, tmux_target: str) -> List[PaneProps]:
+        props: List[str] = shell(
+            'tmux list-panes ' + tmux_target + ' -F #{pane_id},#{pane_tty},#{pane_left},'
+            '#{pane_right},#{pane_top},#{pane_bottom},#{scroll_position}'
+        ).split('\n')
 
-    panes_props = map(_create_pane_props, props)
+        panes_props = map(self._create_pane_props, props)
 
-    return list(panes_props)
+        return list(panes_props)
 
+    def _create_pane_props(self, props: str) -> PaneProps:
+        pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom, scroll_position = \
+                props.split(',')
 
-def _create_pane_props(props: str) -> PaneProps:
-    pane_id, pane_tty, pane_left, pane_right, pane_top, pane_bottom, scroll_position = \
-            props.split(',')
-
-    return PaneProps(
-        pane_id=pane_id,
-        pane_tty=pane_tty,
-        pane_left=pane_left,
-        pane_right=pane_right,
-        pane_top=pane_top,
-        pane_bottom=pane_bottom,
-        scroll_position=scroll_position
-    )
+        return PaneProps(
+            pane_id=pane_id,
+            pane_tty=pane_tty,
+            pane_left=pane_left,
+            pane_right=pane_right,
+            pane_top=pane_top,
+            pane_bottom=pane_bottom,
+            scroll_position=scroll_position
+        )

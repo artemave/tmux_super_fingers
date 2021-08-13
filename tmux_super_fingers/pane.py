@@ -1,9 +1,9 @@
 from __future__ import annotations  # https://stackoverflow.com/a/33533514/51209
 from dataclasses import dataclass
-from typing import List, Dict, Optional
+from typing import List, Dict
 
-from .finders import find_marks
 from .mark import Mark
+from .finders import MarkFinder
 
 
 def _unique_sorted_marks(marks: List[Mark]) -> List[Mark]:
@@ -23,18 +23,18 @@ class Pane:
     right: int
     top: int
     bottom: int
-    _marks: Optional[List[Mark]] = None
+    mark_finder: MarkFinder
 
     @property
     def marks(self) -> List[Mark]:
-        if self._marks is None:
+        if not hasattr(self, '_marks'):
             pane_marks: List[Mark] = []
             path_prefix = self.current_path
             unwrapped_text = self.unwrapped_text
             running_character_total = 0
 
             for line in unwrapped_text.split('\n'):
-                marks = find_marks(line, path_prefix)
+                marks = self.mark_finder.find_marks(line, path_prefix)
                 for mark in marks:
                     mark.start += running_character_total
 

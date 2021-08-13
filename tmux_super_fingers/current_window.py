@@ -4,13 +4,15 @@ from functools import cached_property
 from .pane_props import PaneProps
 from .pane import Pane
 from .tmux_adapter import TmuxAdapter
+from .finders import MarkFinder
 
 
 class CurrentWindow:
     """Current tmux window"""
 
-    def __init__(self, tmux_adapter: TmuxAdapter):
+    def __init__(self, tmux_adapter: TmuxAdapter, mark_finder: MarkFinder):
         self.tmux_adapter = tmux_adapter
+        self.mark_finder = mark_finder
 
     @cached_property
     def panes(self) -> List[Pane]:
@@ -39,6 +41,7 @@ class CurrentWindow:
             right=int(pane_props.pane_right),
             top=int(pane_props.pane_top),
             bottom=pane_bottom,
+            mark_finder=self.mark_finder,
         )
 
 
