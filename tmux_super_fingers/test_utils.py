@@ -49,6 +49,9 @@ class MockTmuxAdapterBase(TmuxAdapter):  # pragma: no cover
     def get_pane_cwd(self, pane_tty: str) -> str:
         return ''
 
+    def os_open(self, file_or_url: str) -> None:
+        self.calls.append(['os_open', file_or_url])
+
 
 def create_pane(pane_obj: Dict[str, Any]) -> Pane:
     pane: Dict[str, Any] = {

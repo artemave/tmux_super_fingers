@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import sys
 from typing import Optional, List
 import re
 import os
@@ -34,6 +35,10 @@ class TmuxAdapter(metaclass=ABCMeta):  # pragma: no cover
 
     @abstractmethod
     def get_pane_cwd(self, pane_tty: str) -> str:
+        ...
+
+    @abstractmethod
+    def os_open(self, file_or_url: str) -> None:
         ...
 
 
@@ -78,6 +83,12 @@ class RealTmuxAdapter(TmuxAdapter):  # pragma: no cover
     def get_pane_cwd(self, pane_tty: str) -> str:
         pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
         return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
+
+    def os_open(self, file_or_url: str) -> None:
+        is_macos = 'darwin' in sys.platform.lower()
+        os_open = 'open' if is_macos else 'xdg-open'
+
+        shell(f'{os_open} {file_or_url}')
 
     def _session_panes_props(self) -> List[PaneProps]:
         return self._get_panes_props('-s')

@@ -1,5 +1,5 @@
 from pytest import MonkeyPatch
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict
 
 from ..pane_props import PaneProps
 from .send_to_vim_in_tmux_pane_action import SendToVimInTmuxPaneAction

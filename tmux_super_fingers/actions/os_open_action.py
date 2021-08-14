@@ -1,14 +1,14 @@
-import sys
-from ..utils import shell
+from dataclasses import dataclass
+
 from .action import Action
 from ..targets.os_openable import OsOpenable
+from ..tmux_adapter import RealTmuxAdapter, TmuxAdapter
 
 
+@dataclass
 class OsOpenAction(Action):
     target: OsOpenable
+    tmux_adapter: TmuxAdapter = RealTmuxAdapter()
 
     def perform(self) -> None:
-        is_macos = 'darwin' in sys.platform.lower()
-        os_open = 'open' if is_macos else 'xdg-open'
-
-        shell(f'{os_open} {self.target.file_or_url}')
+        self.tmux_adapter.os_open(self.target.file_or_url)
