@@ -15,12 +15,12 @@ class BaseFinder(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def pattern(cls) -> Pattern[str]:
+    def pattern(cls) -> Pattern[str]:  # pragma: no cover
         """regexp to find mark cadidate"""
         ...
 
     @abstractmethod
-    def match_to_mark(self, match: Match[str]) -> Optional[Mark]:
+    def match_to_mark(self, match: Match[str]) -> Optional[Mark]:  # pragma: no cover
         """additonal mark checks (e.g. file exists)"""
         ...
 

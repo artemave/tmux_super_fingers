@@ -8,7 +8,7 @@ class _ActionData:
     target: Target
 
 
-class Action(_ActionData, metaclass=ABCMeta):
+class Action(_ActionData, metaclass=ABCMeta):  # pragma: no cover
     @abstractmethod
     def perform(self) -> None:
-        raise NotImplementedError
+        ...

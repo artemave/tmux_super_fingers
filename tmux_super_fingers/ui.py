@@ -2,7 +2,7 @@ import curses
 from abc import ABCMeta, abstractmethod
 
 
-class UI(metaclass=ABCMeta):
+class UI(metaclass=ABCMeta):  # pragma: no cover
     BOLD = 101
     DIM = 102
     BLACK_ON_CYAN = 103
