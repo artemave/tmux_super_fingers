@@ -21,7 +21,7 @@ def flatten(list: List[List[Any]]) -> List[Any]:
 
 def shell(command: str) -> str:
     return subprocess.run(
-        command.split(' '),
+        re.split(' +', command),
         stdout=subprocess.PIPE,
         check=True
     ).stdout.decode('utf-8').rstrip()

@@ -1,12 +1,12 @@
 import re
-from os import path
+from typing import Pattern, Optional, Match
+
+from .file_path_finder_base import FilePathFinderBase
 from .finder import BaseFinder
-from typing import Optional, Pattern, Match
 from ..mark import Mark
-from ..targets.text_file_target import TextFileTarget
 
 
-class TextFilePathFinder(BaseFinder):
+class TextFilePathFinder(BaseFinder, FilePathFinderBase):
     """finds text files with line numbers (if any)"""
 
     @classmethod
@@ -21,21 +21,10 @@ class TextFilePathFinder(BaseFinder):
         file_path = match.group(1)
         line_number = match.group(2)
 
-        if file_path not in ('.', '..', '/'):
-            file_path = path.abspath(path.join(
-                self.path_prefix,
-                path.expanduser(file_path)
-            ))
-
-            if path.isfile(file_path):
-                mark_target = TextFileTarget(file_path)
-                if line_number:
-                    mark_target.line_number = int(line_number)
-
-                return Mark(
-                    start=start,
-                    text=text,
-                    target=mark_target
-                )
-
-        return None
+        return self._match_to_mark(
+            self.path_prefix,
+            start,
+            text,
+            file_path,
+            line_number
+        )

@@ -1,0 +1,31 @@
+from os import path
+from typing import Optional
+from ..mark import Mark
+from ..targets.text_file_target import TextFileTarget
+
+
+class FilePathFinderBase():
+    def _match_to_mark(
+        self,
+        path_prefix: str,
+        start: int,
+        text: str,
+        file_path: str,
+        line_number: Optional[str]
+    ) -> Optional[Mark]:
+        file_path = path.abspath(
+            path.join(path_prefix, path.expanduser(file_path))
+        )
+
+        if path.isfile(file_path):
+            mark_target = TextFileTarget(file_path)
+            if line_number:
+                mark_target.line_number = int(line_number)
+
+            return Mark(
+                start=start,
+                text=text,
+                target=mark_target
+            )
+
+        return None
