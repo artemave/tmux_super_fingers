@@ -8,6 +8,7 @@ from .pane_props import PaneProps
 from .utils import shell, strip
 
 
+# TODO: rename to ShellAdapter or something
 class TmuxAdapter(metaclass=ABCMeta):  # pragma: no cover
     @abstractmethod
     def find_pane_with_running_process(self, command: str) -> Optional[PaneProps]:
