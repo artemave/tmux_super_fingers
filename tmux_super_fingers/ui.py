@@ -20,7 +20,7 @@ class UI(metaclass=ABCMeta):  # pragma: no cover
 
     @property
     @abstractmethod
-    def BLACK_ON_RED(self) -> int:
+    def BLACK_ON_YELLOW(self) -> int:
         ...
 
     @abstractmethod
@@ -45,14 +45,14 @@ class CursesUI(UI):  # pragma: no cover
     def BLACK_ON_CYAN(self) -> int: return curses.color_pair(1)
 
     @property
-    def BLACK_ON_RED(self) -> int: return curses.color_pair(2)
+    def BLACK_ON_YELLOW(self) -> int: return curses.color_pair(2)
 
     def __init__(self, window: curses.window):
         # To inherit window background
         curses.use_default_colors()
         curses.curs_set(False)
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
-        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
+        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_YELLOW)
 
         self.window = window
 

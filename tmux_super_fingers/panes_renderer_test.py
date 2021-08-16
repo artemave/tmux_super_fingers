@@ -22,7 +22,7 @@ class MockUI(UI):
     def BLACK_ON_CYAN(self) -> int: return 103
 
     @property
-    def BLACK_ON_RED(self) -> int: return 104
+    def BLACK_ON_YELLOW(self) -> int: return 104
 
     def __init__(self, user_input: List[int]):
         self.calls: List[List[Any]] = []
@@ -85,7 +85,7 @@ def test_draws_single_pane_with_a_single_mark():
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
         ['render_line', 0, 1, 'ine', ui.BOLD],
-        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
         ['getch', 97],
     ]
     assert mock_target.calls == [['perform_primary_action']]
@@ -110,12 +110,12 @@ def test_space_turns_on_secondary_action_mode():
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
         ['render_line', 0, 1, 'ine', ui.BOLD],
-        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
         ['getch', ascii.SP],
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
         ['render_line', 0, 1, 'ine', ui.BOLD],
-        ['render_line', 0, 1, 'a', ui.BLACK_ON_RED],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_YELLOW | ui.BOLD],
         ['getch', 97],
     ]
     assert mock_target.calls == [['perform_secondary_action']]
@@ -140,17 +140,17 @@ def test_second_space_turns_off_secondary_action_mode():
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
         ['render_line', 0, 1, 'ine', ui.BOLD],
-        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
         ['getch', ascii.SP],
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
         ['render_line', 0, 1, 'ine', ui.BOLD],
-        ['render_line', 0, 1, 'a', ui.BLACK_ON_RED],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_YELLOW | ui.BOLD],
         ['getch', ascii.SP],
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
         ['render_line', 0, 1, 'ine', ui.BOLD],
-        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
         ['getch', 97],
     ]
     assert mock_target.calls == [['perform_primary_action']]
@@ -176,13 +176,13 @@ def test_hides_marks_that_dont_match_user_input():
         ['render_line', 1, 0, 'line 2', ui.DIM],
 
         ['render_line', 0, 0, 'li', ui.BOLD],
-        ['render_line', 0, 0, '1a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 0, '1a', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['render_line', 0, 3, 'e 1', ui.BOLD],
-        ['render_line', 0, 3, '1b', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 3, '1b', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['render_line', 1, 3, 'e 2', ui.BOLD],
-        ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN],
+        ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN | ui.BOLD],
 
         # user pressed '1' - less hints are rendered
         ['getch', 49],
@@ -191,10 +191,10 @@ def test_hides_marks_that_dont_match_user_input():
         ['render_line', 1, 0, 'line 2', ui.DIM],
 
         ['render_line', 0, 0, 'li', ui.BOLD],
-        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['render_line', 0, 3, 'e 1', ui.BOLD],
-        ['render_line', 0, 4, 'b', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 4, 'b', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['getch', ascii.ESC]
     ]
@@ -221,13 +221,13 @@ def test_shows_back_hidden_marks_when_on_backspace():
         ['render_line', 1, 0, 'line 2', ui.DIM],
 
         ['render_line', 0, 0, 'li', ui.BOLD],
-        ['render_line', 0, 0, '1a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 0, '1a', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['render_line', 0, 3, 'e 1', ui.BOLD],
-        ['render_line', 0, 3, '1b', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 3, '1b', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['render_line', 1, 3, 'e 2', ui.BOLD],
-        ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN],
+        ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN | ui.BOLD],
 
         # user pressed '1' - less hints are rendered
         ['getch', 49],
@@ -236,10 +236,10 @@ def test_shows_back_hidden_marks_when_on_backspace():
         ['render_line', 1, 0, 'line 2', ui.DIM],
 
         ['render_line', 0, 0, 'li', ui.BOLD],
-        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['render_line', 0, 3, 'e 1', ui.BOLD],
-        ['render_line', 0, 4, 'b', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 4, 'b', ui.BLACK_ON_CYAN | ui.BOLD],
 
         # user pressed backspace - back to the original
         ['getch', 127],
@@ -248,13 +248,13 @@ def test_shows_back_hidden_marks_when_on_backspace():
         ['render_line', 1, 0, 'line 2', ui.DIM],
 
         ['render_line', 0, 0, 'li', ui.BOLD],
-        ['render_line', 0, 0, '1a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 0, '1a', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['render_line', 0, 3, 'e 1', ui.BOLD],
-        ['render_line', 0, 3, '1b', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 3, '1b', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['render_line', 1, 3, 'e 2', ui.BOLD],
-        ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN],
+        ['render_line', 1, 3, 'c', ui.BLACK_ON_CYAN | ui.BOLD],
 
         ['getch', ascii.ESC]
     ]
@@ -280,7 +280,7 @@ def test_multiline_mark():
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
         ['render_line', 0, 4, 'st', ui.BOLD],
-        ['render_line', 0, 4, 'a', ui.BLACK_ON_CYAN],
+        ['render_line', 0, 4, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
         ['render_line', 1, 0, 'uff', ui.BOLD],
         ['getch', 97],
     ]

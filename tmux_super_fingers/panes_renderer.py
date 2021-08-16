@@ -99,8 +99,8 @@ class PanesRenderer:
                 hint_left = mark_left + len(user_input)
                 hint = highlight.hint[len(user_input):]
 
-                color = self.ui.BLACK_ON_RED if self.secondary_mode else self.ui.BLACK_ON_CYAN | self.ui.BOLD
-                self.ui.render_line(line_top, hint_left, hint, color)
+                bg = self.ui.BLACK_ON_YELLOW if self.secondary_mode else self.ui.BLACK_ON_CYAN
+                self.ui.render_line(line_top, hint_left, hint, bg | self.ui.BOLD)
 
 
 def _get_highlights(pane: Pane) -> Generator[tuple[int, int, Highlight], None, None]:
