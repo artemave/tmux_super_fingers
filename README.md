@@ -34,7 +34,7 @@ Super Fingers builds upon this idea. Notably:
 
 ### Secondary action
 
-If you press <kbd>alt</kbd> when choosing a mark, highlighted text is copied into clipboard instead.
+Pressing <kbd>space</kbd> toggles "secondary" mode. In this mode, mark is copied to clipboard.
 
 ## Install
 
@@ -74,8 +74,8 @@ set -g @super-fingers-key f
 
 - [ ] generic, configurable/pluggable way to send highlited text to arbitrary target (not just `vim` and `xdg-open`)
 - [ ] search marks
-- [ ] secondary action
+- [x] secondary action
 - [x] configurable `@super-fingers-key`
 - [x] create vim window if there are none in the session
-- [ ] extract untested code into tested packages
+- [x] extract untested code into tested packages
 - [ ] python stack traces (line numbers)

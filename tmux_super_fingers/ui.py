@@ -3,9 +3,25 @@ from abc import ABCMeta, abstractmethod
 
 
 class UI(metaclass=ABCMeta):  # pragma: no cover
-    BOLD = 101
-    DIM = 102
-    BLACK_ON_CYAN = 103
+    @property
+    @abstractmethod
+    def BOLD(self) -> int:
+        ...
+
+    @property
+    @abstractmethod
+    def DIM(self) -> int:
+        ...
+
+    @property
+    @abstractmethod
+    def BLACK_ON_CYAN(self) -> int:
+        ...
+
+    @property
+    @abstractmethod
+    def BLACK_ON_RED(self) -> int:
+        ...
 
     @abstractmethod
     def render_line(self, y: int, x: int, line: str, color: int) -> None:
@@ -19,18 +35,24 @@ class UI(metaclass=ABCMeta):  # pragma: no cover
 class CursesUI(UI):  # pragma: no cover
     """Curses adapter"""
 
-    BOLD: int = curses.A_BOLD
-    DIM: int = curses.A_DIM
+    @property
+    def BOLD(self) -> int: return curses.A_BOLD
 
     @property
-    def BLACK_ON_CYAN(self) -> int:
-        return curses.color_pair(1)
+    def DIM(self) -> int: return curses.A_DIM
+
+    @property
+    def BLACK_ON_CYAN(self) -> int: return curses.color_pair(1)
+
+    @property
+    def BLACK_ON_RED(self) -> int: return curses.color_pair(2)
 
     def __init__(self, window: curses.window):
         # To inherit window background
         curses.use_default_colors()
         curses.curs_set(False)
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
+        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
 
         self.window = window
 

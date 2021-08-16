@@ -4,6 +4,7 @@ from .os_openable import OsOpenable
 from .editor_openable import EditorOpenable
 from ..actions import send_to_vim_in_tmux_pane_action
 from ..actions import os_open_action
+from ..actions import copy_to_clipboard_action
 
 
 class TextFileTarget(OsOpenable, EditorOpenable):
@@ -16,3 +17,6 @@ class TextFileTarget(OsOpenable, EditorOpenable):
             send_to_vim_in_tmux_pane_action.SendToVimInTmuxPaneAction(self).perform()
         else:
             os_open_action.OsOpenAction(self).perform()
+
+    def perform_secondary_action(self) -> None:
+        copy_to_clipboard_action.CopyToClipboardAction(self).perform()

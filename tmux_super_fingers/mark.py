@@ -20,3 +20,6 @@ class Mark(Highlight):
 
     def perform_primary_action(self):
         self.target.perform_primary_action()
+
+    def perform_secondary_action(self):
+        self.target.perform_secondary_action()

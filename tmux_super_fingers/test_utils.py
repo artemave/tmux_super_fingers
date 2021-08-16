@@ -23,6 +23,9 @@ class MockTarget(Target):
     def perform_primary_action(self):
         self.calls.append(['perform_primary_action'])
 
+    def perform_secondary_action(self):
+        self.calls.append(['perform_secondary_action'])
+
 
 class MockTmuxAdapterBase(TmuxAdapter):  # pragma: no cover
     def __init__(self):
@@ -51,6 +54,9 @@ class MockTmuxAdapterBase(TmuxAdapter):  # pragma: no cover
 
     def os_open(self, file_or_url: str) -> None:
         self.calls.append(['os_open', file_or_url])
+
+    def copy_to_clipboard(self, text: str) -> None:
+        self.calls.append(['copy_to_clipboard', text])
 
 
 def create_pane(pane_obj: Dict[str, Any]) -> Pane:

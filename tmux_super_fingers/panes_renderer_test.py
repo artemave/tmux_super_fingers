@@ -12,6 +12,18 @@ def teardown_function():
 
 
 class MockUI(UI):
+    @property
+    def BOLD(self) -> int: return 101
+
+    @property
+    def DIM(self) -> int: return 102
+
+    @property
+    def BLACK_ON_CYAN(self) -> int: return 103
+
+    @property
+    def BLACK_ON_RED(self) -> int: return 104
+
     def __init__(self, user_input: List[int]):
         self.calls: List[List[Any]] = []
         self.user_input = user_input
@@ -70,6 +82,71 @@ def test_draws_single_pane_with_a_single_mark():
     panes_renderer.loop()
 
     assert ui.calls == [
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+        ['render_line', 0, 1, 'ine', ui.BOLD],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['getch', 97],
+    ]
+    assert mock_target.calls == [['perform_primary_action']]
+
+
+def test_space_turns_on_secondary_action_mode():
+    ui = MockUI(user_input=[ascii.SP, 97, ascii.ESC])
+    mock_target = MockTarget()
+
+    pane = create_pane({'text': 'line 1\nline 2'})
+    pane.marks = [Mark(
+        start=1,
+        text='ine',
+        target=mock_target,
+        hint='a'
+    )]
+    panes_renderer = PanesRenderer(ui, [pane])
+
+    panes_renderer.loop()
+
+    assert ui.calls == [
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+        ['render_line', 0, 1, 'ine', ui.BOLD],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['getch', ascii.SP],
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+        ['render_line', 0, 1, 'ine', ui.BOLD],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_RED],
+        ['getch', 97],
+    ]
+    assert mock_target.calls == [['perform_secondary_action']]
+
+
+def test_second_space_turns_off_secondary_action_mode():
+    ui = MockUI(user_input=[ascii.SP, ascii.SP, 97, ascii.ESC])
+    mock_target = MockTarget()
+
+    pane = create_pane({'text': 'line 1\nline 2'})
+    pane.marks = [Mark(
+        start=1,
+        text='ine',
+        target=mock_target,
+        hint='a'
+    )]
+    panes_renderer = PanesRenderer(ui, [pane])
+
+    panes_renderer.loop()
+
+    assert ui.calls == [
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+        ['render_line', 0, 1, 'ine', ui.BOLD],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN],
+        ['getch', ascii.SP],
+        ['render_line', 0, 0, 'line 1', ui.DIM],
+        ['render_line', 1, 0, 'line 2', ui.DIM],
+        ['render_line', 0, 1, 'ine', ui.BOLD],
+        ['render_line', 0, 1, 'a', ui.BLACK_ON_RED],
+        ['getch', ascii.SP],
         ['render_line', 0, 0, 'line 1', ui.DIM],
         ['render_line', 1, 0, 'line 2', ui.DIM],
         ['render_line', 0, 1, 'ine', ui.BOLD],

@@ -3,9 +3,12 @@ import sys
 from typing import Optional, List
 import re
 import os
+import subprocess
 
 from .pane_props import PaneProps
 from .utils import shell, strip
+
+is_macos = 'darwin' in sys.platform.lower()
 
 
 # TODO: rename to ShellAdapter or something
@@ -40,6 +43,10 @@ class TmuxAdapter(metaclass=ABCMeta):  # pragma: no cover
 
     @abstractmethod
     def os_open(self, file_or_url: str) -> None:
+        ...
+
+    @abstractmethod
+    def copy_to_clipboard(self, text: str) -> None:
         ...
 
 
@@ -86,10 +93,13 @@ class RealTmuxAdapter(TmuxAdapter):  # pragma: no cover
         return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
 
     def os_open(self, file_or_url: str) -> None:
-        is_macos = 'darwin' in sys.platform.lower()
         os_open = 'open' if is_macos else 'xdg-open'
 
         shell(f'{os_open} {file_or_url}')
+
+    def copy_to_clipboard(self, text: str) -> None:
+        os_copy_to_clipboard = 'pbcopy' if is_macos else 'xclip'
+        subprocess.run(os_copy_to_clipboard, text=True, input=text)
 
     def _session_panes_props(self) -> List[PaneProps]:
         return self._get_panes_props('-s')

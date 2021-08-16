@@ -18,6 +18,7 @@ class PanesRenderer:
     def __init__(self, ui: UI, panes: List[Pane]):
         self.ui = ui
         self.panes = panes
+        self.secondary_mode = False
 
     def loop(self) -> None:
         user_input = ''
@@ -29,7 +30,11 @@ class PanesRenderer:
                 chosen_mark = _the_only_mark_left(panes)
 
                 if chosen_mark:
-                    chosen_mark.perform_primary_action()
+                    if self.secondary_mode:
+                        chosen_mark.perform_secondary_action()
+                    else:
+                        chosen_mark.perform_primary_action()
+
                     break
 
             for pane in panes:
@@ -53,6 +58,13 @@ class PanesRenderer:
                 user_input = user_input[:-1]
             else:
                 raise BreakTheLoop
+        elif char == ascii.SP:
+            if self.secondary_mode:
+                self.secondary_mode = False
+            else:
+                self.secondary_mode = True
+
+            return user_input
         else:
             user_input += chr(char)
 
@@ -87,7 +99,7 @@ class PanesRenderer:
                 hint_left = mark_left + len(user_input)
                 hint = highlight.hint[len(user_input):]
 
-                color = self.ui.BLACK_ON_CYAN | self.ui.BOLD
+                color = self.ui.BLACK_ON_RED if self.secondary_mode else self.ui.BLACK_ON_CYAN | self.ui.BOLD
                 self.ui.render_line(line_top, hint_left, hint, color)
 
 
