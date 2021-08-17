@@ -43,7 +43,7 @@ Requires python3.
 ### Using [TPM](https://github.com/tmux-plugins/tpm):
 
     set -g @plugin 'artemave/tmux_super_fingers'
-    
+
 Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin.
 
 ### Manual
@@ -70,12 +70,28 @@ Customize how to enter fingers mode. Always preceded by prefix: `prefix + @super
 set -g @super-fingers-key f
 ```
 
+### Custom actions
+
+Requires writing some python code. There are different types of mark [targets](./targets) (e.g. text file target, url target). Each target type has a primary and a secondary actions. You can supply a python file that changes default actions for target types. In the following example, we make 'copy to clipboard' a primary action and 'send to vim' a secondary action for 'text file' target:
+
+```python3
+from .targets.text_file_target import TextFileTarget
+from .actions.copy_to_clipboard_action import CopyToClipboardAction
+from .actions.send_to_vim_in_tmux_pane_action import SendToVimInTmuxPaneAction
+
+TextFileTarget.primary_action = CopyToClipboardAction
+TextFileTarget.secondary_action = SendToVimInTmuxPaneAction
+```
+
+You can also define new action types. See [existing actions](./actions) for details.
+
 ## TODO
 
-- [ ] generic, configurable/pluggable way to send highlited text to arbitrary target (not just `vim` and `xdg-open`)
+- [x] generic, configurable/pluggable way to send highlited text to arbitrary action (not just `vim` and `xdg-open`)
 - [ ] search marks
 - [x] secondary action
 - [x] configurable `@super-fingers-key`
 - [x] create vim window if there are none in the session
 - [x] extract untested code into tested packages
 - [ ] python stack traces (line numbers)
+- [ ] add image file target

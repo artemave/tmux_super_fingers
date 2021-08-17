@@ -7,8 +7,8 @@ from ..tmux_adapter import RealTmuxAdapter, TmuxAdapter
 
 @dataclass
 class CopyToClipboardAction(Action):
-    target: OsOpenable
+    target_payload: OsOpenable
     tmux_adapter: TmuxAdapter = RealTmuxAdapter()
 
     def perform(self) -> None:
-        self.tmux_adapter.copy_to_clipboard(self.target.file_or_url)
+        self.tmux_adapter.copy_to_clipboard(self.target_payload.file_or_url)

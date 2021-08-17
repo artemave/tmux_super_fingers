@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 from abc import ABCMeta, abstractmethod
-from ..targets.target import Target
+from ..targets.target_payload import TargetPaylod
 
 
 @dataclass
 class _ActionData:
-    target: Target
+    # TODO: force reimplementation
+    target_payload: TargetPaylod
 
 
 class Action(_ActionData, metaclass=ABCMeta):  # pragma: no cover

@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from .target import Target
+from .target_payload import TargetPaylod
 
 
 @dataclass
-class EditorOpenable(Target):
+class EditorOpenable(TargetPaylod):
     """ Anything that can be sent to vim """
 
     file_path: str

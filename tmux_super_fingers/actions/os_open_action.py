@@ -7,8 +7,8 @@ from ..tmux_adapter import RealTmuxAdapter, TmuxAdapter
 
 @dataclass
 class OsOpenAction(Action):
-    target: OsOpenable
+    target_payload: OsOpenable
     tmux_adapter: TmuxAdapter = RealTmuxAdapter()
 
     def perform(self) -> None:
-        self.tmux_adapter.os_open(self.target.file_or_url)
+        self.tmux_adapter.os_open(self.target_payload.file_or_url)

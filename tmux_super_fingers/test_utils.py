@@ -1,11 +1,13 @@
 import os
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Type
 from .pane import Pane
 from .mark import Mark
 from .pane_props import PaneProps
 from .tmux_adapter import TmuxAdapter
 from .targets.target import Target
+from .targets.target_payload import TargetPaylod
 from .finders import MarkFinder
+from .actions.action import Action
 
 ORDERS_CONTROLLER = """
 class OrdersController
@@ -16,15 +18,29 @@ end
 """
 
 
+class MockAction(Action):
+    def perform(self):
+        self.performed = True
+
+
 class MockTarget(Target):
     # This is class property, because targets get cloned at some point within the `loop()`
     calls: List[List[Any]] = []
 
-    def perform_primary_action(self):
-        self.calls.append(['perform_primary_action'])
+    @property
+    def payload(self) -> TargetPaylod:
+        if not hasattr(self, '_payload'):
+            self._payload = TargetPaylod()
 
-    def perform_secondary_action(self):
-        self.calls.append(['perform_secondary_action'])
+        return self._payload
+
+    def default_primary_action(self) -> Type[Action]:
+        self.calls.append(['default_primary_action'])
+        return MockAction
+
+    def default_secondary_action(self) -> Type[Action]:
+        self.calls.append(['default_secondary_action'])
+        return MockAction
 
 
 class MockTmuxAdapterBase(TmuxAdapter):  # pragma: no cover

@@ -88,7 +88,7 @@ def test_draws_single_pane_with_a_single_mark():
         ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
         ['getch', 97],
     ]
-    assert mock_target.calls == [['perform_primary_action']]
+    assert mock_target.calls == [['default_primary_action']]
 
 
 def test_space_turns_on_secondary_action_mode():
@@ -118,7 +118,7 @@ def test_space_turns_on_secondary_action_mode():
         ['render_line', 0, 1, 'a', ui.BLACK_ON_YELLOW | ui.BOLD],
         ['getch', 97],
     ]
-    assert mock_target.calls == [['perform_secondary_action']]
+    assert mock_target.calls == [['default_secondary_action']]
 
 
 def test_second_space_turns_off_secondary_action_mode():
@@ -153,7 +153,7 @@ def test_second_space_turns_off_secondary_action_mode():
         ['render_line', 0, 1, 'a', ui.BLACK_ON_CYAN | ui.BOLD],
         ['getch', 97],
     ]
-    assert mock_target.calls == [['perform_primary_action']]
+    assert mock_target.calls == [['default_primary_action']]
 
 
 def test_hides_marks_that_dont_match_user_input():
@@ -284,7 +284,7 @@ def test_multiline_mark():
         ['render_line', 1, 0, 'uff', ui.BOLD],
         ['getch', 97],
     ]
-    assert mock_target.calls == [['perform_primary_action']]
+    assert mock_target.calls == [['default_primary_action']]
 
 
 def test_multiple_panes():

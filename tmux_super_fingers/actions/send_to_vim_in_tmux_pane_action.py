@@ -11,7 +11,7 @@ from ..tmux_adapter import TmuxAdapter, RealTmuxAdapter
 
 @dataclass
 class SendToVimInTmuxPaneAction(Action):
-    target: EditorOpenable
+    target_payload: EditorOpenable
     tmux_adapter: TmuxAdapter = RealTmuxAdapter()
 
     def perform(self) -> None:
@@ -27,7 +27,7 @@ class SendToVimInTmuxPaneAction(Action):
             )
 
     def _vim_e_args(self) -> str:
-        if self.target.line_number:
-            return f'+{self.target.line_number} {self.target.file_path}'
+        if self.target_payload.line_number:
+            return f'+{self.target_payload.line_number} {self.target_payload.file_path}'
 
-        return f'{self.target.file_path}'
+        return f'{self.target_payload.file_path}'

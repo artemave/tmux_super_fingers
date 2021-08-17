@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
-from .target import Target
+from .target_payload import TargetPaylod
 
 
-class OsOpenable(Target, metaclass=ABCMeta):  # pragma: no cover
+class OsOpenable(TargetPaylod, metaclass=ABCMeta):  # pragma: no cover
     """ Anything that can be sent to open/xdg-open. """
 
     @property

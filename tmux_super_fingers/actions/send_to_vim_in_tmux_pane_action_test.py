@@ -3,7 +3,7 @@ from typing import Optional, Dict
 
 from ..pane_props import PaneProps
 from .send_to_vim_in_tmux_pane_action import SendToVimInTmuxPaneAction
-from ..targets.text_file_target import TextFileTarget
+from ..targets.text_file_target import TextFileTargetPayload
 from ..test_utils import create_pane_props, MockTmuxAdapterBase
 
 
@@ -20,10 +20,10 @@ def test_sends_keys_to_new_window_running_vim(monkeypatch: MonkeyPatch):
     monkeypatch.setenv('EDITOR', 'vim')
     monkeypatch.setenv('SHELL', '/bin/zsh')
 
-    target = TextFileTarget(file_path='/tmp/file.txt')
+    target_payload = TextFileTargetPayload(file_path='/tmp/file.txt')
     tmux_adapter = MockTmuxAdapter()
 
-    action = SendToVimInTmuxPaneAction(target=target, tmux_adapter=tmux_adapter)
+    action = SendToVimInTmuxPaneAction(target_payload=target_payload, tmux_adapter=tmux_adapter)
     action.perform()
 
     assert tmux_adapter.calls == [
@@ -35,10 +35,10 @@ def test_sends_keys_to_existing_window_running_vim(monkeypatch: MonkeyPatch):
     monkeypatch.setenv('EDITOR', 'vim')
     monkeypatch.setenv('SHELL', '/bin/zsh')
 
-    target = TextFileTarget(file_path='/tmp/file.txt', line_number=2)
+    target_payload = TextFileTargetPayload(file_path='/tmp/file.txt', line_number=2)
     tmux_adapter = MockTmuxAdapter({'vim': create_pane_props({'pane_id': '2'})})
 
-    action = SendToVimInTmuxPaneAction(target=target, tmux_adapter=tmux_adapter)
+    action = SendToVimInTmuxPaneAction(target_payload=target_payload, tmux_adapter=tmux_adapter)
     action.perform()
 
     assert tmux_adapter.calls == [
