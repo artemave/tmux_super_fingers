@@ -72,7 +72,11 @@ set -g @super-fingers-key f
 
 ### Custom actions
 
-Requires writing some python code. There are different types of mark [targets](./tmux_super_fingers/targets) (e.g. text file target, url target). Each target type has a primary and a secondary actions. You can supply a python file that changes default actions for target types. In the following example, we make 'copy to clipboard' a primary action and 'send to vim' a secondary action for 'text file' target:
+Requires writing some python code.
+
+There are different types of mark [targets](./tmux_super_fingers/targets) (e.g. text file target, url target). Each target type has a primary and a secondary actions. You can supply a python file that changes default actions for target types.
+
+In the following example, we make 'copy to clipboard' a primary action and 'send to vim' a secondary action for 'text file' target:
 
 ```python3
 from .targets.text_file_target import TextFileTarget
@@ -84,6 +88,12 @@ TextFileTarget.secondary_action = SendToVimInTmuxPaneAction
 ```
 
 You can also define new action types. See [existing actions](./tmux_super_fingers/actions) for details.
+
+Now let's plug it in:
+
+```
+set -g @super-fingers-extend /path/to/the/above/code.py
+```
 
 ## TODO
 
