@@ -2,8 +2,8 @@ import os
 import re
 from dataclasses import dataclass
 from typing import Type, Optional
-from .os_openable import OsOpenable
-from .editor_openable import EditorOpenable
+from .target_payload import OsOpenable
+from .target_payload import EditorOpenable
 from ..actions.action import Action
 from ..actions.send_to_vim_in_tmux_pane_action import SendToVimInTmuxPaneAction
 from ..actions.os_open_action import OsOpenAction

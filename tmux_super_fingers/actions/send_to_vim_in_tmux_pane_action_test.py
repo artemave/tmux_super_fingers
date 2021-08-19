@@ -23,7 +23,7 @@ def test_sends_keys_to_new_window_running_vim(monkeypatch: MonkeyPatch):
     target_payload = TextFileTargetPayload(file_path='/tmp/file.txt')
     tmux_adapter = MockTmuxAdapter()
 
-    action = SendToVimInTmuxPaneAction(target_payload=target_payload, tmux_adapter=tmux_adapter)
+    action = SendToVimInTmuxPaneAction(target_payload, tmux_adapter)
     action.perform()
 
     assert tmux_adapter.calls == [
@@ -38,7 +38,7 @@ def test_sends_keys_to_existing_window_running_vim(monkeypatch: MonkeyPatch):
     target_payload = TextFileTargetPayload(file_path='/tmp/file.txt', line_number=2)
     tmux_adapter = MockTmuxAdapter({'vim': create_pane_props({'pane_id': '2'})})
 
-    action = SendToVimInTmuxPaneAction(target_payload=target_payload, tmux_adapter=tmux_adapter)
+    action = SendToVimInTmuxPaneAction(target_payload, tmux_adapter)
     action.perform()
 
     assert tmux_adapter.calls == [

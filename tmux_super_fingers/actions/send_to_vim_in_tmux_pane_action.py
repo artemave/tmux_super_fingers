@@ -1,18 +1,17 @@
-from dataclasses import dataclass
+import os
 
 from .action import Action
-import os
-from ..targets.editor_openable import EditorOpenable
-from ..tmux_adapter import TmuxAdapter, RealTmuxAdapter
+from ..targets.target_payload import EditorOpenable
+from ..tmux_adapter import RealTmuxAdapter, TmuxAdapter
 
 # emacs go to line number:
 #   send-keys -t %3 M-x goto-line Enter 3 Enter
 
 
-@dataclass
 class SendToVimInTmuxPaneAction(Action):
-    target_payload: EditorOpenable
-    tmux_adapter: TmuxAdapter = RealTmuxAdapter()
+    def __init__(self, target_payload: EditorOpenable, tmux_adapter: TmuxAdapter = RealTmuxAdapter()):
+        self.target_payload = target_payload
+        self.tmux_adapter = tmux_adapter
 
     def perform(self) -> None:
         editor_pane = self.tmux_adapter.find_pane_with_running_process(os.environ['EDITOR'])

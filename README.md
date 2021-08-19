@@ -76,14 +76,30 @@ Requires writing some python code.
 
 There are different types of mark [targets](./tmux_super_fingers/targets) (e.g. text file target, url target). Each target type has a primary and a secondary actions. You can supply a python file that changes default actions for target types.
 
-In the following example, we make 'copy to clipboard' a primary action and 'send to vim' a secondary action for 'text file' target:
+For example, the following code changes primary action to open files in vscode and secondary action to send them to vim:
 
 ```python3
+import os
 from .targets.text_file_target import TextFileTarget
-from .actions.copy_to_clipboard_action import CopyToClipboardAction
 from .actions.send_to_vim_in_tmux_pane_action import SendToVimInTmuxPaneAction
+from .actions.action import Action
+from .targets.target_payload import EditorOpenable
 
-TextFileTarget.primary_action = CopyToClipboardAction
+
+class SendToVsCodeAction(Action):
+    def __init__(self, target_payload: EditorOpenable):
+        self.target_payload = target_payload
+
+    def perform(self):
+        path = self.target_payload.file_path
+
+        if self.target_payload.line_number:
+            path += f':{self.target_payload.line_number}'
+
+        os.system(f'code -g {path}')
+
+
+TextFileTarget.primary_action = SendToVsCodeAction
 TextFileTarget.secondary_action = SendToVimInTmuxPaneAction
 ```
 
