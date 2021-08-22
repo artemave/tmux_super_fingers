@@ -113,7 +113,7 @@ set -g @super-fingers-extend /path/to/the/above/code.py
 
 ## Development
 
-Prerequisites: python3, pipenv, node
+Prerequisites: python3, pipenv, node, make
 
 ```
 git clone https://github.com/artemave/tmux_super_fingers.git
