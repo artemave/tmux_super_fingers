@@ -4,7 +4,7 @@ flake8:
 	pipenv run flake8
 
 pyright:
-	pipenv run yarn run pyright
+	pipenv run ./node_modules/.bin/pyright
 
 cov:
 	pipenv run pytest --cov tmux_super_fingers --cov-branch

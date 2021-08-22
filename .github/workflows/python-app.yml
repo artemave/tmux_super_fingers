@@ -44,7 +44,7 @@ jobs:
         node-version: "16"
 
     - name: Install node packages
-      run: yarn install
+      run: npm install
 
     - name: test
       run: make
