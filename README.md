@@ -111,6 +111,23 @@ Now let's plug it in:
 set -g @super-fingers-extend /path/to/the/above/code.py
 ```
 
+## Development
+
+Prerequisites: python3, pipenv, node
+
+```
+git clone https://github.com/artemave/tmux_super_fingers.git
+cd tmux_super_fingers
+pipenv install
+npm install
+```
+
+Run checks and tests:
+
+```
+make
+```
+
 ## TODO
 
 - [x] generic, configurable/pluggable way to send highlited text to arbitrary action (not just `vim` and `xdg-open`)
