@@ -16,7 +16,7 @@ https://user-images.githubusercontent.com/23721/127735461-e716cca9-c6e4-46b9-97d
 
 ## Description
 
-Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) are highlighted and assigned a "mark". When user hits the mark key, the highlighted text gets copied to clipboard.
+Tmux [fingers](https://github.com/morantron/tmux-fingers) plugin introduced the "fingers" mode, where particularly looking chunks of text (e.g. file paths) are highlighted and assigned a character "mark". When user hits the mark key, the highlighted text gets copied to clipboard.
 
 Super Fingers builds upon this idea. Notably:
 
