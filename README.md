@@ -103,7 +103,7 @@ TextFileTarget.primary_action = SendToVsCodeAction
 TextFileTarget.secondary_action = SendToVimInTmuxPaneAction
 ```
 
-You can also define new action types. See [existing actions](./tmux_super_fingers/actions) for details.
+_You can also define new action types. See [existing actions](./tmux_super_fingers/actions) for details._
 
 Now let's plug it in:
 
