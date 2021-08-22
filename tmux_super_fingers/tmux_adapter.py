@@ -63,11 +63,11 @@ class RealTmuxAdapter(TmuxAdapter):  # pragma: no cover
         tty_infos = shell(f"ps -o state= -o comm= -o tty= -t {','.join(tty_list)}").split('\n')
 
         process_info = next(iter([
-            info for info in tty_infos if re.search(fr'^[^TXZ] +{command}', info)
+            info for info in tty_infos if re.search(fr'^[^TXZ].? +{command}', info)
         ]), None)
 
         if process_info:
-            pane_tty = re.split(' +', process_info)[-1]
+            pane_tty = re.split(' +', process_info.rstrip())[-1]
             return [
                 pane_props for pane_props in session_panes_props
                 if pane_props.pane_tty == f'/dev/{pane_tty}'
