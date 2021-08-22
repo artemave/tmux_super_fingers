@@ -74,7 +74,7 @@ set -g @super-fingers-key f
 
 Requires writing some python code.
 
-There are different types of mark [targets](./tmux_super_fingers/targets) (e.g. text file target, url target). Each target type has a primary and a secondary actions. You can supply a python file that changes default actions for target types.
+There are different types of mark [targets](./tmux_super_fingers/targets) (e.g. text file target, url target). Each target type has a primary and a secondary action. You can supply a python file that changes default actions for target types.
 
 For example, the following code changes primary action to open files in vscode and secondary action to send them to vim:
 
