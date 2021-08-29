@@ -101,6 +101,11 @@ class RealTmuxAdapter(TmuxAdapter):  # pragma: no cover
         os_copy_to_clipboard = 'pbcopy' if is_macos else 'xclip'
         subprocess.run(os_copy_to_clipboard, text=True, input=text)
 
+    def get_file_type(self, path: str) -> str:
+        raw = shell(f'file -ib {path}').split('\n')[0]
+        raw_type = re.split('/', raw)[0]
+        return raw_type
+
     def _session_panes_props(self) -> List[PaneProps]:
         return self._get_panes_props('-s')
 
