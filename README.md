@@ -137,4 +137,4 @@ make
 - [x] create vim window if there are none in the session
 - [x] extract untested code into tested packages
 - [ ] python stack traces (line numbers)
-- [ ] add image file target
+- [x] handle image files
