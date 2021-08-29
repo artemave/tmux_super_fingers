@@ -80,7 +80,7 @@ For example, the following code changes primary action to open files in vscode a
 
 ```python3
 import os
-from .targets.text_file_target import TextFileTarget
+from .targets.file_target import FileTarget
 from .actions.send_to_vim_in_tmux_pane_action import SendToVimInTmuxPaneAction
 from .actions.action import Action
 from .targets.target_payload import EditorOpenable
@@ -99,8 +99,8 @@ class SendToVsCodeAction(Action):
         os.system(f'code -g {path}')
 
 
-TextFileTarget.primary_action = SendToVsCodeAction
-TextFileTarget.secondary_action = SendToVimInTmuxPaneAction
+FileTarget.primary_action = SendToVsCodeAction
+FileTarget.secondary_action = SendToVimInTmuxPaneAction
 ```
 
 _You can also define new action types. See [existing actions](./tmux_super_fingers/actions) for details._

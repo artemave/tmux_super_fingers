@@ -2,7 +2,7 @@ import re
 import os
 from typing import Optional, Pattern, Match
 from ..mark import Mark
-from ..targets.text_file_target import TextFileTarget
+from ..targets.file_target import FileTarget
 from ..utils import camel_to_snake
 from .finder import BaseFinder
 
@@ -30,7 +30,7 @@ class RailsLogControllerFinder(BaseFinder):
         method_def_regex = re.compile('^\\s*def\\s+%s' % (action))
 
         if os.path.exists(controller_path):
-            mark_target = TextFileTarget(controller_path)
+            mark_target = FileTarget(controller_path)
 
             with open(controller_path) as ruby_file:
                 line_number = 0

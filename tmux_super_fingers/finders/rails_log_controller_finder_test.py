@@ -1,6 +1,6 @@
 import os
 
-from ..targets.text_file_target import TextFileTarget
+from ..targets.file_target import FileTarget
 from ..mark import Mark
 from ..test_utils import assert_marks
 
@@ -30,7 +30,7 @@ def test_finds_rails_controller(change_test_dir: str):
             Mark(
                 start=14,
                 text='OrdersController#show',
-                target=TextFileTarget(
+                target=FileTarget(
                     file_path=change_test_dir + '/app/controllers/orders_controller.rb',
                     line_number=5
                     )

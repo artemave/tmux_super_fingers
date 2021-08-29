@@ -12,20 +12,20 @@ from .target import Target
 
 
 @dataclass
-class TextFileTargetPayload(OsOpenable, EditorOpenable):
+class FileTargetPayload(OsOpenable, EditorOpenable):
     @property
     def file_or_url(self) -> str:
         return self.file_path
 
 
 @dataclass
-class TextFileTarget(Target):
+class FileTarget(Target):
     file_path: str
     line_number: Optional[int] = None
 
     @property
-    def payload(self) -> TextFileTargetPayload:
-        return TextFileTargetPayload(
+    def payload(self) -> FileTargetPayload:
+        return FileTargetPayload(
             file_path=self.file_path,
             line_number=self.line_number
         )

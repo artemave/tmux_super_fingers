@@ -3,7 +3,7 @@ import re
 from typing import Match, Optional, Pattern
 
 from ..mark import Mark
-from ..targets.text_file_target import TextFileTarget
+from ..targets.file_target import FileTarget
 from .finder import BaseFinder
 
 
@@ -30,7 +30,7 @@ class RailsLogPartialFinder(BaseFinder):
             return Mark(
                 start=start,
                 text=text,
-                target=TextFileTarget(file_path)
+                target=FileTarget(file_path)
             )
 
         return None

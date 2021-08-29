@@ -1,6 +1,6 @@
 import os
 from ..mark import Mark
-from ..targets.text_file_target import TextFileTarget
+from ..targets.file_target import FileTarget
 from ..test_utils import assert_marks
 
 
@@ -18,7 +18,7 @@ Hello
         Mark(
             start=19,
             text='./app/controllers/orders_controller.rb',
-            target=TextFileTarget(
+            target=FileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
             )
         )
@@ -35,7 +35,7 @@ def test_finds_relative_file_with_line_number(change_test_dir: str):
         Mark(
             start=9,
             text='./app/controllers/orders_controller.rb:32',
-            target=TextFileTarget(
+            target=FileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
                 line_number=32
             )
@@ -54,7 +54,7 @@ def test_finds_absolute_file(change_test_dir: str):
         Mark(
             start=9,
             text=os.getcwd() + '/app/controllers/orders_controller.rb',
-            target=TextFileTarget(
+            target=FileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb'
             )
         )
@@ -72,7 +72,7 @@ def test_finds_file_with_at_symbol(change_test_dir: str):
         Mark(
             start=9,
             text=os.getcwd() + '/app/@controllers/orders_controller.rb',
-            target=TextFileTarget(
+            target=FileTarget(
                 file_path=os.getcwd() + '/app/@controllers/orders_controller.rb'
             )
         )
