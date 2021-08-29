@@ -30,6 +30,14 @@ def test_sends_to_tmux_if_editor_is_vim(monkeypatch: MonkeyPatch):
     assert target.default_primary_action() == SendToVimInTmuxPaneAction
 
 
+def test_sends_to_os_open_if_not_a_text_file(monkeypatch: MonkeyPatch):
+    target = FileTarget(file_path='/some/path', content_type=ContentType.DATA)
+
+    monkeypatch.setenv('EDITOR', 'vim')
+
+    assert target.default_primary_action() == OsOpenAction
+
+
 def test_sends_to_os_open_if_editor_is_not_vim(monkeypatch: MonkeyPatch):
     target = FileTarget(file_path='/some/path', content_type=ContentType.TEXT)
 
