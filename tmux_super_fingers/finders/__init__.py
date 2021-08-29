@@ -4,7 +4,7 @@ from ..utils import flatten
 from .rails_log_controller_finder import RailsLogControllerFinder
 from .rails_log_partial_finder import RailsLogPartialFinder
 from .url_finder import UrlFinder
-from .text_file_path_finder import TextFilePathFinder
+from .file_path_finder import FilePathFinder
 from .diff_file_path_finder import DiffFilePathFinder
 from .finder import BaseFinder
 # import image_file_path_finder
@@ -16,7 +16,7 @@ class MarkFinder:
     FINDERS: List[Type[BaseFinder]] = [
         RailsLogControllerFinder,
         UrlFinder,
-        TextFilePathFinder,
+        FilePathFinder,
         RailsLogPartialFinder,
         DiffFilePathFinder
     ]

@@ -6,7 +6,7 @@ from .finder import BaseFinder
 from ..mark import Mark
 
 
-class TextFilePathFinder(BaseFinder, FilePathFinderBase):
+class FilePathFinder(BaseFinder, FilePathFinderBase):
     """finds text files with line numbers (if any)"""
 
     @classmethod
