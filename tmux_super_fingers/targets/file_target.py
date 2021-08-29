@@ -39,12 +39,13 @@ class FileTarget(Target):
             line_number=self.line_number
         )
 
-    # TODO: make @property
+    @property
     def default_primary_action(self) -> Type[Action]:
         if self.content_type == ContentType.TEXT and re.search('^n?vim', os.environ['EDITOR']):
             return SendToVimInTmuxPaneAction
         else:
             return OsOpenAction
 
+    @property
     def default_secondary_action(self) -> Type[Action]:
         return CopyToClipboardAction

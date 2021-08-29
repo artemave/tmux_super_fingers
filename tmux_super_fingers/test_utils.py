@@ -34,10 +34,12 @@ class MockTarget(Target):
 
         return self._payload
 
+    @property
     def default_primary_action(self) -> Type[Action]:
         self.calls.append(['default_primary_action'])
         return MockAction
 
+    @property
     def default_secondary_action(self) -> Type[Action]:
         self.calls.append(['default_secondary_action'])
         return MockAction

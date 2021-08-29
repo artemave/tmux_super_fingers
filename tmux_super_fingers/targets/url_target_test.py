@@ -12,10 +12,10 @@ def test_payload_if_file_or_url():
 def test_primarty_action_is_os_open():
     target = UrlTarget('http://example.com')
 
-    assert target.default_primary_action() == OsOpenAction
+    assert target.default_primary_action == OsOpenAction
 
 
 def test_secondary_action_is_copy_to_clipboard():
     target = UrlTarget('http://example.com')
 
-    assert target.default_secondary_action() == CopyToClipboardAction
+    assert target.default_secondary_action == CopyToClipboardAction

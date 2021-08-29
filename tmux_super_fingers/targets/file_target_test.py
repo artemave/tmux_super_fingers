@@ -19,7 +19,7 @@ def test_sends_to_tmux_if_editor_is_nvim(monkeypatch: MonkeyPatch):
 
     monkeypatch.setenv('EDITOR', 'nvim')
 
-    assert target.default_primary_action() == SendToVimInTmuxPaneAction
+    assert target.default_primary_action == SendToVimInTmuxPaneAction
 
 
 def test_sends_to_tmux_if_editor_is_vim(monkeypatch: MonkeyPatch):
@@ -27,7 +27,7 @@ def test_sends_to_tmux_if_editor_is_vim(monkeypatch: MonkeyPatch):
 
     monkeypatch.setenv('EDITOR', 'vim')
 
-    assert target.default_primary_action() == SendToVimInTmuxPaneAction
+    assert target.default_primary_action == SendToVimInTmuxPaneAction
 
 
 def test_sends_to_os_open_if_not_a_text_file(monkeypatch: MonkeyPatch):
@@ -35,7 +35,7 @@ def test_sends_to_os_open_if_not_a_text_file(monkeypatch: MonkeyPatch):
 
     monkeypatch.setenv('EDITOR', 'vim')
 
-    assert target.default_primary_action() == OsOpenAction
+    assert target.default_primary_action == OsOpenAction
 
 
 def test_sends_to_os_open_if_editor_is_not_vim(monkeypatch: MonkeyPatch):
@@ -43,10 +43,10 @@ def test_sends_to_os_open_if_editor_is_not_vim(monkeypatch: MonkeyPatch):
 
     monkeypatch.setenv('EDITOR', 'code')
 
-    assert target.default_primary_action() == OsOpenAction
+    assert target.default_primary_action == OsOpenAction
 
 
 def test_secondary_action_is_copy_to_clipboard():
     target = FileTarget('/some/path', content_type=ContentType.TEXT)
 
-    assert target.default_secondary_action() == CopyToClipboardAction
+    assert target.default_secondary_action == CopyToClipboardAction

@@ -27,8 +27,10 @@ class UrlTarget(Target):
     def payload(self) -> UrlTargetPayload:
         return UrlTargetPayload(self.url)
 
+    @property
     def default_primary_action(self) -> Type[Action]:
         return OsOpenAction
 
+    @property
     def default_secondary_action(self) -> Type[Action]:
         return CopyToClipboardAction
