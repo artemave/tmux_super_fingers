@@ -1,5 +1,6 @@
 import os
 import re
+from enum import Enum, auto
 from dataclasses import dataclass
 from typing import Type, Optional
 from .target_payload import OsOpenable
@@ -18,9 +19,17 @@ class FileTargetPayload(OsOpenable, EditorOpenable):
         return self.file_path
 
 
+class ContentType(Enum):
+    """three file types returned by unix `file` command"""
+    TEXT = auto()
+    DATA = auto()
+    EXECUTABLE = auto()
+
+
 @dataclass
 class FileTarget(Target):
     file_path: str
+    content_type: ContentType
     line_number: Optional[int] = None
 
     @property

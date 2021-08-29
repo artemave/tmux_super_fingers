@@ -1,6 +1,6 @@
 import os
 from ..mark import Mark
-from ..targets.file_target import FileTarget
+from ..targets.file_target import FileTarget, ContentType
 from ..test_utils import assert_marks
 
 
@@ -20,6 +20,7 @@ Hello
             text='./app/controllers/orders_controller.rb',
             target=FileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                content_type=ContentType.TEXT
             )
         )
     ]
@@ -37,6 +38,7 @@ def test_finds_relative_file_with_line_number(change_test_dir: str):
             text='./app/controllers/orders_controller.rb:32',
             target=FileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                content_type=ContentType.TEXT,
                 line_number=32
             )
         )
@@ -55,7 +57,8 @@ def test_finds_absolute_file(change_test_dir: str):
             start=9,
             text=os.getcwd() + '/app/controllers/orders_controller.rb',
             target=FileTarget(
-                file_path=os.getcwd() + '/app/controllers/orders_controller.rb'
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                content_type=ContentType.TEXT,
             )
         )
     ]
@@ -73,7 +76,8 @@ def test_finds_file_with_at_symbol(change_test_dir: str):
             start=9,
             text=os.getcwd() + '/app/@controllers/orders_controller.rb',
             target=FileTarget(
-                file_path=os.getcwd() + '/app/@controllers/orders_controller.rb'
+                file_path=os.getcwd() + '/app/@controllers/orders_controller.rb',
+                content_type=ContentType.TEXT,
             )
         )
     ]

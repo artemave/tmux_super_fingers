@@ -1,7 +1,7 @@
 import os
 
 from ..mark import Mark
-from ..targets.file_target import FileTarget
+from ..targets.file_target import FileTarget, ContentType
 from ..test_utils import assert_marks
 
 
@@ -15,7 +15,8 @@ def test_finds_rails_partial(change_test_dir: str):
                 start=9,
                 text='partials/_client_user_bar.html.erb',
                 target=FileTarget(
-                    file_path=change_test_dir + '/app/views/partials/_client_user_bar.html.erb'
+                    file_path=change_test_dir + '/app/views/partials/_client_user_bar.html.erb',
+                    content_type=ContentType.TEXT
                     )
                 )
             ]

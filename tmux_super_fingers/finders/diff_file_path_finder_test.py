@@ -1,7 +1,7 @@
 import os
 
 from ..mark import Mark
-from ..targets.file_target import FileTarget
+from ..targets.file_target import FileTarget, ContentType
 from ..test_utils import assert_marks
 
 
@@ -21,7 +21,8 @@ index c06609e..0f33345 100644
             start=165,
             text='app/controllers/orders_controller.rb',
             target=FileTarget(
-                file_path=os.getcwd() + '/app/controllers/orders_controller.rb'
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                content_type=ContentType.TEXT
             )
         )
     ]

@@ -1,7 +1,7 @@
 from os import path
 from typing import Optional
 from ..mark import Mark
-from ..targets.file_target import FileTarget
+from ..targets.file_target import FileTarget, ContentType
 
 
 class FilePathFinderBase():
@@ -18,7 +18,7 @@ class FilePathFinderBase():
         )
 
         if path.isfile(file_path):
-            mark_target = FileTarget(file_path)
+            mark_target = FileTarget(file_path, ContentType.TEXT)
             if line_number:
                 mark_target.line_number = int(line_number)
 
