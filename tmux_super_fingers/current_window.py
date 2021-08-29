@@ -3,20 +3,20 @@ from functools import cached_property
 
 from .pane_props import PaneProps
 from .pane import Pane
-from .tmux_adapter import TmuxAdapter
+from .cli_adapter import CliAdapter
 from .finders import MarkFinder
 
 
 class CurrentWindow:
     """Current tmux window"""
 
-    def __init__(self, tmux_adapter: TmuxAdapter, mark_finder: MarkFinder):
-        self.tmux_adapter = tmux_adapter
+    def __init__(self, cli_adapter: CliAdapter, mark_finder: MarkFinder):
+        self.cli_adapter = cli_adapter
         self.mark_finder = mark_finder
 
     @cached_property
     def panes(self) -> List[Pane]:
-        panes_props: List[PaneProps] = self.tmux_adapter.current_window_panes_props()
+        panes_props: List[PaneProps] = self.cli_adapter.current_tmux_window_panes_props()
 
         panes = list(map(self._create_pane_from_props, panes_props))
 
@@ -34,9 +34,14 @@ class CurrentWindow:
         end = pane_bottom - vertical_offset
 
         return Pane(
-            unwrapped_text=self.tmux_adapter.capture_viewport(pane_props.pane_id, start, end, unwrapped=True),
-            text=self.tmux_adapter.capture_viewport(pane_props.pane_id, start, end),
-            current_path=self.tmux_adapter.get_pane_cwd(pane_props.pane_tty),
+            unwrapped_text=self.cli_adapter.capture_tmux_viewport(
+                pane_props.pane_id,
+                start,
+                end,
+                unwrapped=True
+            ),
+            text=self.cli_adapter.capture_tmux_viewport(pane_props.pane_id, start, end),
+            current_path=self.cli_adapter.get_tmux_pane_cwd(pane_props.pane_tty),
             left=int(pane_props.pane_left),
             right=int(pane_props.pane_right),
             top=int(pane_props.pane_top),

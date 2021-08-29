@@ -2,7 +2,7 @@ from os import path
 from typing import Optional
 from ..mark import Mark
 from ..targets.file_target import FileTarget, ContentType
-from ..tmux_adapter import RealTmuxAdapter
+from ..cli_adapter import RealCliAdapter
 
 
 class FilePathFinderBase():
@@ -19,11 +19,11 @@ class FilePathFinderBase():
         )
 
         if path.isfile(file_path):
-            tmux_adapter = RealTmuxAdapter()
+            cli_adapter = RealCliAdapter()
             content_type = {
                 'text': ContentType.TEXT,
                 'application': ContentType.EXECUTABLE
-            }.get(tmux_adapter.get_file_type(file_path)) or ContentType.DATA
+            }.get(cli_adapter.get_file_type(file_path)) or ContentType.DATA
             mark_target = FileTarget(file_path, content_type)
             if line_number:
                 mark_target.line_number = int(line_number)

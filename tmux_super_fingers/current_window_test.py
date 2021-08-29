@@ -5,7 +5,7 @@ from .pane import Pane
 from .mark import Mark
 from .pane_props import PaneProps
 from .current_window import CurrentWindow
-from .test_utils import MockTmuxAdapterBase, MockTarget
+from .test_utils import MockCliAdapterBase, MockTarget
 from .utils import flatten
 from .finders import MarkFinder
 from .finders.finder import BaseFinder
@@ -28,8 +28,8 @@ class CharFinder(BaseFinder):
 
 
 def test_panes_from_pane_props():
-    class MockTmuxAdapter(MockTmuxAdapterBase):
-        def current_window_panes_props(self) -> List[PaneProps]:
+    class MockTmuxAdapter(MockCliAdapterBase):
+        def current_tmux_window_panes_props(self) -> List[PaneProps]:
             return [
                 PaneProps(
                     pane_id='1',
@@ -51,15 +51,15 @@ def test_panes_from_pane_props():
                 )
             ]
 
-        def capture_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
+        def capture_tmux_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
             return f'pane_id:{pane_id} start:{start} end:{end} unwrapped:{unwrapped}'
 
-        def get_pane_cwd(self, pane_tty: str) -> str:
+        def get_tmux_pane_cwd(self, pane_tty: str) -> str:
             return '/some/path'
 
-    tmux_adapter = MockTmuxAdapter()
+    cli_adapter = MockTmuxAdapter()
     mark_finder = MarkFinder(finders=[CharFinder])
-    window = CurrentWindow(tmux_adapter, mark_finder)
+    window = CurrentWindow(cli_adapter, mark_finder)
 
     assert window.panes == [
         Pane(

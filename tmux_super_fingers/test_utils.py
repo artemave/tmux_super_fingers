@@ -3,7 +3,7 @@ from typing import Dict, Any, List, Optional, Type
 from .pane import Pane
 from .mark import Mark
 from .pane_props import PaneProps
-from .tmux_adapter import TmuxAdapter
+from .cli_adapter import CliAdapter
 from .targets.target import Target
 from .targets.target_payload import TargetPaylod
 from .finders import MarkFinder
@@ -43,29 +43,29 @@ class MockTarget(Target):
         return MockAction
 
 
-class MockTmuxAdapterBase(TmuxAdapter):  # pragma: no cover
+class MockCliAdapterBase(CliAdapter):  # pragma: no cover
     def __init__(self):
         self.calls: List[List[Any]] = []
 
-    def find_pane_with_running_process(self, command: str) -> Optional[PaneProps]:
+    def find_tmux_pane_with_running_process(self, command: str) -> Optional[PaneProps]:
         return None
 
-    def select_window(self, id: str) -> None:
-        self.calls.append(['select_window', id])
+    def select_tmux_window(self, id: str) -> None:
+        self.calls.append(['select_tmux_window', id])
 
-    def new_window(self, name: str, command: str) -> None:
-        self.calls.append(['new_window', name, command])
+    def new_tmux_window(self, name: str, command: str) -> None:
+        self.calls.append(['new_tmux_window', name, command])
 
-    def send_keys(self, id: str, keys: str) -> None:
-        self.calls.append(['send_keys', id, keys])
+    def tmux_send_keys(self, id: str, keys: str) -> None:
+        self.calls.append(['tmux_send_keys', id, keys])
 
-    def current_window_panes_props(self) -> List[PaneProps]:
+    def current_tmux_window_panes_props(self) -> List[PaneProps]:
         return []
 
-    def capture_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
+    def capture_tmux_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
         return ''
 
-    def get_pane_cwd(self, pane_tty: str) -> str:
+    def get_tmux_pane_cwd(self, pane_tty: str) -> str:
         return ''
 
     def os_open(self, file_or_url: str) -> None:

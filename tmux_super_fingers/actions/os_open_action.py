@@ -1,12 +1,12 @@
 from .action import Action
 from ..targets.target_payload import OsOpenable
-from ..tmux_adapter import RealTmuxAdapter, TmuxAdapter
+from ..cli_adapter import RealCliAdapter, CliAdapter
 
 
 class OsOpenAction(Action):
-    def __init__(self, target_payload: OsOpenable, tmux_adapter: TmuxAdapter = RealTmuxAdapter()):
+    def __init__(self, target_payload: OsOpenable, cli_adapter: CliAdapter = RealCliAdapter()):
         self.target_payload = target_payload
-        self.tmux_adapter = tmux_adapter
+        self.cli_adapter = cli_adapter
 
     def perform(self) -> None:
-        self.tmux_adapter.os_open(self.target_payload.file_or_url)
+        self.cli_adapter.os_open(self.target_payload.file_or_url)
