@@ -1,5 +1,5 @@
 import os
-from shutil import copy2
+from shutil import copy
 from ..mark import Mark
 from ..targets.file_target import FileTarget, ContentType
 from ..test_utils import assert_marks, create_pane
@@ -89,16 +89,16 @@ def test_sets_content_type(change_test_dir: str):
     expected_marks = [
         Mark(
             start=9,
-            text='./true',
+            text='./cp',
             target=FileTarget(
-                file_path=os.getcwd() + '/true',
+                file_path=os.getcwd() + '/cp',
                 content_type=ContentType.EXECUTABLE
             )
         )
     ]
-    copy2('/bin/true', './')
+    copy('/bin/cp', './')
     pane = create_pane({
-        'unwrapped_text': 'Stuff in ./true rail',
+        'unwrapped_text': 'Stuff in ./cp rail',
         'current_path': os.getcwd()
     })
     assert pane.marks == expected_marks
