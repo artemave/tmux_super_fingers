@@ -60,3 +60,21 @@ def test_finds_absolute_file(change_test_dir: str):
         )
     ]
     assert_marks(pane, expected_marks)
+
+
+def test_finds_file_with_at_symbol(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+        'unwrapped_text': f'Stuff in {cwd}/app/@controllers/orders_controller.rb hello',
+        'current_path': cwd
+    }
+    expected_marks = [
+        Mark(
+            start=9,
+            text=os.getcwd() + '/app/@controllers/orders_controller.rb',
+            target=TextFileTarget(
+                file_path=os.getcwd() + '/app/@controllers/orders_controller.rb'
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/@controllers/orders_controller.rb')

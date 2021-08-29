@@ -12,7 +12,7 @@ class TextFilePathFinder(BaseFinder, FilePathFinderBase):
     @classmethod
     def pattern(cls) -> Pattern[str]:
         return re.compile(
-            r'([~./]?[-a-zA-Z0-9_+-,./]+)(?::(\d+))?'
+            r'([~./]?[-a-zA-Z0-9_+-,./@]+)(?::(\d+))?'
         )
 
     def match_to_mark(self, match: Match[str]) -> Optional[Mark]:
