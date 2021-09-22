@@ -38,7 +38,7 @@ Pressing <kbd>space</kbd> toggles "secondary" mode. In this mode, mark is copied
 
 ## Install
 
-Requires python3.
+Requires Python >= 3.9.
 
 ### Using [TPM](https://github.com/tmux-plugins/tpm):
 
