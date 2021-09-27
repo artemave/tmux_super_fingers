@@ -54,7 +54,7 @@ Clone the repo:
 
 Source it in your `.tmux.conf`:
 
-    run-shell ~/.tmux/plugins/tmux_fingers_fingers/tmux_super_fingers.tmux
+    run-shell ~/.tmux/plugins/tmux_super_fingers/tmux_super_fingers.tmux
 
 Reload TMUX conf by running:
 
