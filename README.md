@@ -26,6 +26,7 @@ Super Fingers builds upon this idea. Notably:
 - text that isn't a file path, but maps onto one (e.g. `UsersController#show` in rails log or `+++ b/app/models/user.rb` in a diff) is also highlighted
 - different types of marks are actioned differently: text files are sent to editor, urls and image files - to OS open.***
 - works across all panes in a window
+- can be invoked while scrolling up
 - handles multiline marks (wrapping)
 
 \* _currently this behavior only works for (n)vim - everything else is sent to OS open._</br>
@@ -133,7 +134,7 @@ make
 The plugin relies on `EDITOR` variable being set. However, it has been observed that under some circumstances (I can't figure out what they are) tmux does not inherit environment when it starts and so the plugin code runs, `EDITOR` is missing and nothing works.
 Running `tmux set-environment -g EDITOR $EDITOR` later fixes it, but I can't figure out how to automate this.
 
-By the way, when the the code fails, the plugin tmux window closes and you don't see the error. You're back to the original window and it appears as if nothing happened. To see the error, set `set remain-on-exit on` whilst in plugin window (if you get that far) or globally.
+By the way, when the the code fails for whatever reason, the error output is lost because "fingers" window is automatically closed on exit. You're back to the original window and it appears as if nothing happened. To see the error, set `set remain-on-exit on` whilst in plugin window (if you get that far) or globally.
 
 ## TODO
 
