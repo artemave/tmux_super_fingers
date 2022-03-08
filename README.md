@@ -136,7 +136,7 @@ Running `tmux set-environment -g EDITOR $EDITOR` later fixes it, but I can't fig
 
 ### Debug
 
-When the the code fails for whatever reason, the error output is lost because "fingers" window is automatically closed on exit. You're back to the original window and it appears as if nothing happened. To see the error, set `set remain-on-exit on` whilst in plugin window (if you get that far) or globally.
+When the code fails for whatever reason, the error output is lost because "fingers" window is automatically closed on exit. You're back to the original window and it appears as if nothing happened. To see the error, set `set remain-on-exit on` whilst in plugin window (if you get that far) or globally.
 
 ## TODO
 
