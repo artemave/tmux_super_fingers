@@ -134,9 +134,9 @@ make
 The plugin relies on `EDITOR` variable being set. However, it has been observed that under some circumstances (I can't figure out what they are) tmux does not inherit environment when it starts and so the plugin code runs, `EDITOR` is missing and nothing works.
 Running `tmux set-environment -g EDITOR $EDITOR` later fixes it, but I can't figure out how to automate this.
 
-### Debug
+One (untested) workaround could be to alias tmux like this:
 
-When the code fails for whatever reason, the error output is lost because "fingers" window is automatically closed on exit. You're back to the original window and it appears as if nothing happened. To see the error, set `set remain-on-exit on` whilst in plugin window (if you get that far) or globally.
+    alias tmux="tmux && tmux set-environment -g EDITOR $EDITOR"
 
 ## TODO
 
