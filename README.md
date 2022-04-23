@@ -119,7 +119,7 @@ Prerequisites: python3, pipenv, node, make
 ```
 git clone https://github.com/artemave/tmux_super_fingers.git
 cd tmux_super_fingers
-pipenv install
+pipenv install --dev
 npm install
 ```
 

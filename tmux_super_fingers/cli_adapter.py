@@ -98,7 +98,7 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
 
     def copy_to_clipboard(self, text: str) -> None:
         os_copy_to_clipboard = 'pbcopy' if is_macos else 'xclip'
-        subprocess.run(os_copy_to_clipboard, text=True, input=text)
+        subprocess.run(os_copy_to_clipboard, shell=True, check=True, text=True, input=text)
 
     def get_file_type(self, path: str) -> str:
         file_cmd = '/usr/bin/file --mime-type -b' if is_macos else 'file -ib'
