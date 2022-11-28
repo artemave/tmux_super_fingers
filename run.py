@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import sys
 import os
 from curses import wrapper, window
 
@@ -13,8 +12,8 @@ from tmux_super_fingers import eval_file
 
 
 def main(stdscr: window) -> None:
-    if len(sys.argv) > 1:
-        eval_file(sys.argv[1])
+    if "FINGERS_EXTEND" in os.environ:
+        eval_file(os.environ["FINGERS_EXTEND"])
 
     ui = CursesUI(stdscr)
     current_window = CurrentWindow(RealCliAdapter(), MarkFinder())
