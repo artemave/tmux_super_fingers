@@ -9,4 +9,4 @@ def test_strip_removes_leading_whitespaces_from_each_line():
 
 
 def test_shell_runs_shell_process():
-    assert utils.shell('date +%d') == str(datetime.datetime.today().day)
+    assert utils.shell('date +%Y') == str(datetime.datetime.today().year)
