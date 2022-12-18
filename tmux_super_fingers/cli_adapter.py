@@ -110,10 +110,11 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
         subprocess.run(os_copy_to_clipboard, shell=True, check=True, text=True, input=text)
 
     def get_file_type(self, path: str) -> str:
-        file_cmd = '/usr/bin/file --mime-type -b' if is_macos else 'file -ib'
-        raw = shell(f'{file_cmd} {path}').split('\n')[0]
-        raw_type = re.split('/', raw)[0]
-        return raw_type
+        raw = shell(f'file {path}').split('\n')[0]
+        if re.search(r'\btext\b', raw):
+            return 'text'
+        else:
+            return 'application'
 
     def _session_panes_props(self) -> List[PaneProps]:
         return self._get_panes_props('-s')
