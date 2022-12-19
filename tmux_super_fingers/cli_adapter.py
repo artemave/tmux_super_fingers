@@ -65,10 +65,7 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
         # (smallest tty first, as this corresponds to the pane with the smallest index)
         def tty_sort(line: str) -> str:
             m = re.search(r'\d+$', line)
-            if m:
-                return m.group(0)
-
-            return '9999999999'
+            return m.group(0) if m else '9999999999'
 
         ps_output.sort(key=tty_sort)
 
