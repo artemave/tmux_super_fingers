@@ -60,13 +60,15 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
         tty_list = [pane_props.pane_tty for pane_props in session_panes_props]
 
         ps_output = shell(f"ps -o state= -o comm= -o tty= -t {','.join(tty_list)}").split('\n')
+
         # sort lines in ps_output by `\d+$` match ascending
         # (smallest tty first, as this corresponds to the pane with the smallest index)
-
         def tty_sort(line: str) -> str:
             m = re.search(r'\d+$', line)
-            assert m is not None
-            return m.group(0)
+            if m:
+                return m.group(0)
+
+            return '9999999999'
 
         ps_output.sort(key=tty_sort)
 
