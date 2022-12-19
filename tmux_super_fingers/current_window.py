@@ -1,6 +1,6 @@
 from typing import List
 from functools import cached_property
-
+from .hint_generator import HintGenerator
 from .pane_props import PaneProps
 from .pane import Pane
 from .cli_adapter import CliAdapter
@@ -20,7 +20,10 @@ class CurrentWindow:
 
         panes = list(map(self._create_pane_from_props, panes_props))
 
-        _assign_hints(panes)
+        hint_generator = HintGenerator()
+        for pane in reversed(panes):
+            for mark in reversed(pane.marks):
+                mark.hint = hint_generator.next_hint(mark.text)
 
         return panes
 
@@ -48,22 +51,3 @@ class CurrentWindow:
             bottom=pane_bottom,
             mark_finder=self.mark_finder,
         )
-
-
-def _assign_hints(panes: List[Pane]) -> None:
-    mark_number = 0
-    for pane in reversed(panes):
-        for mark in reversed(pane.marks):
-            mark.hint = _number_to_hint(mark_number)
-            mark_number += 1
-
-
-def _number_to_hint(number: int) -> str:
-    prefix = int(number / 26)
-    letter_number = number % 26
-    letter = chr(97 + letter_number)
-
-    if prefix > 0:
-        return f'{prefix}{letter}'
-
-    return letter

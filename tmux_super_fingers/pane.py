@@ -1,17 +1,9 @@
 from __future__ import annotations  # https://stackoverflow.com/a/33533514/51209
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import List
 
 from .mark import Mark
 from .finders import MarkFinder
-
-
-def _unique_sorted_marks(marks: List[Mark]) -> List[Mark]:
-    index: Dict[str, Mark] = {}
-    for mark in marks:
-        index[mark.text] = mark
-
-    return sorted(index.values(), key=lambda m: m.start)
 
 
 @dataclass
@@ -46,7 +38,7 @@ class Pane:
             # with futures.ThreadPoolExecutor() as executor:
             #     marks = compact(executor.map(lambda m: find_match(m, text, path_prefix), matches))
 
-            self._marks = _unique_sorted_marks(pane_marks)
+            self._marks = pane_marks
 
         return self._marks
 

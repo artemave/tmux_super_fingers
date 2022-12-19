@@ -6,7 +6,6 @@ from .mark import Mark
 from .pane_props import PaneProps
 from .current_window import CurrentWindow
 from .test_utils import MockCliAdapterBase, MockTarget
-from .utils import flatten
 from .finders import MarkFinder
 from .finders.finder import BaseFinder
 
@@ -82,42 +81,4 @@ def test_panes_from_pane_props():
             bottom=10,
             mark_finder=mark_finder,
         ),
-    ]
-    marks = flatten([p.marks for p in window.panes])
-    assert [m.hint for m in marks] == [
-        '1i',
-        '1h',
-        '1g',
-        '1f',
-        '1e',
-        '1d',
-        '1c',
-        '1b',
-        '1a',
-        'z',
-        'y',
-        'x',
-        'w',
-        'v',
-        'u',
-        't',
-        's',
-        'r',
-        'q',
-        'p',
-        'o',
-        'n',
-        'm',
-        'l',
-        'k',
-        'j',
-        'i',
-        'h',
-        'g',
-        'f',
-        'e',
-        'd',
-        'c',
-        'b',
-        'a',
     ]
