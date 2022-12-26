@@ -144,5 +144,5 @@ def _the_only_mark_left(panes: List[Pane]) -> Optional[Mark]:
         [m for m in p.marks] for p in panes
     ])
 
-    if len(marks_left) == 1:
+    if len(set([m.hint for m in marks_left])) == 1:
         return marks_left[0]
