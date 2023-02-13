@@ -45,9 +45,9 @@ def test_finds_relative_file_with_line_number(change_test_dir: str):
         )
     ]
     assert_marks(pane, expected_marks)
-    
-    
- def test_finds_relative_file_with_line_number_python(change_test_dir: str):
+
+
+def test_finds_relative_file_with_line_number_python(change_test_dir: str):
     pane = {
         'unwrapped_text': 'File "./app/controllers/orders_controller.rb", line 32, in <module>',
         'current_path': os.getcwd()
@@ -55,7 +55,7 @@ def test_finds_relative_file_with_line_number(change_test_dir: str):
     expected_marks = [
         Mark(
             start=6,
-            text='./app/controllers/orders_controller.rb:32',
+            text='./app/controllers/orders_controller.rb", line 32',
             target=FileTarget(
                 file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
                 content_type=ContentType.TEXT,
