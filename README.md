@@ -146,5 +146,5 @@ One (untested) workaround could be to alias tmux like this:
 - [x] configurable `@super-fingers-key`
 - [x] create vim window if there are none in the session
 - [x] extract untested code into tested packages
-- [ ] python stack traces (line numbers)
+- [x] python stack traces (line numbers)
 - [x] handle image files
