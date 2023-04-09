@@ -35,7 +35,7 @@ Super Fingers builds upon this idea. Notably:
 
 ### Secondary action
 
-Pressing <kbd>space</kbd> toggles "secondary" mode. In this mode, mark is copied to clipboard.
+When in fingers mode, pressing <kbd>space</kbd> toggles "secondary" mode. In this mode, mark is copied to clipboard.
 
 ## Install
 
