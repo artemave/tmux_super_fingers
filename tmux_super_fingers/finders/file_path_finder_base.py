@@ -18,11 +18,10 @@ class FilePathFinderBase():
             path.join(path_prefix, path.expanduser(file_path))
         )
 
-        if path.isfile(file_path):
+        if path.isfile(file_path) or path.isdir(file_path):
             cli_adapter = RealCliAdapter()
             content_type = {
                 'text': ContentType.TEXT,
-                'application': ContentType.EXECUTABLE
             }.get(cli_adapter.get_file_type(file_path)) or ContentType.DATA
             mark_target = FileTarget(file_path, content_type)
             if line_number:

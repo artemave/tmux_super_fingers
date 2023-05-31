@@ -23,7 +23,6 @@ class ContentType(Enum):
     """three file types returned by unix `file` command"""
     TEXT = auto()
     DATA = auto()
-    EXECUTABLE = auto()
 
 
 @dataclass

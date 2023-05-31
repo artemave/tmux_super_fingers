@@ -111,7 +111,7 @@ def test_sets_content_type(change_test_dir: str):
             text='./cp',
             target=FileTarget(
                 file_path=os.getcwd() + '/cp',
-                content_type=ContentType.EXECUTABLE
+                content_type=ContentType.DATA
             )
         )
     ]
@@ -120,4 +120,23 @@ def test_sets_content_type(change_test_dir: str):
         'unwrapped_text': 'Stuff in ./cp rail',
         'current_path': os.getcwd()
     })
+    assert pane.marks == expected_marks
+
+
+def test_finds_directories(change_test_dir: str):
+    os.mkdir('./stuff')
+    pane = create_pane({
+        'unwrapped_text': 'Stuff in ./stuff rail',
+        'current_path': os.getcwd()
+    })
+    expected_marks = [
+        Mark(
+            start=9,
+            text='./stuff',
+            target=FileTarget(
+                file_path=os.getcwd() + '/stuff',
+                content_type=ContentType.DATA
+            )
+        )
+    ]
     assert pane.marks == expected_marks
