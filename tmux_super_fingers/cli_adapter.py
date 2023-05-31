@@ -102,7 +102,10 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
     def os_open(self, file_or_url: str) -> None:
         os_open = 'open' if is_macos else 'xdg-open'
 
-        shell(f'{os_open} {file_or_url}')
+        subprocess.Popen(
+            [os_open, file_or_url],
+            start_new_session=True,
+        )
 
     def copy_to_clipboard(self, text: str) -> None:
         os_copy_to_clipboard = 'pbcopy' if is_macos else 'xclip'
