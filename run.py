@@ -16,12 +16,12 @@ def main(stdscr: window) -> None:
         eval_file(os.environ["FINGERS_EXTEND"])
 
     ui = CursesUI(stdscr)
-    current_window = CurrentWindow(RealCliAdapter(), MarkFinder())
+    cli_adapter = RealCliAdapter()
+    current_window = CurrentWindow(cli_adapter, MarkFinder())
 
     renderer = PanesRenderer(ui, current_window.panes)
-    renderer.loop()
+    renderer.loop(cli_adapter)
 
-
-# Make escape delay unnoticable (it is very noticable by default)
+# Make escape delay unnoticeable (it is very noticeable by default)
 os.environ.setdefault('ESCDELAY', '25')
 wrapper(main)

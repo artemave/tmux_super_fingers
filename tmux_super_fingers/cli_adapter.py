@@ -51,6 +51,8 @@ class CliAdapter(metaclass=ABCMeta):  # pragma: no cover
 
 class RealCliAdapter(CliAdapter):  # pragma: no cover
     def current_tmux_window_panes_props(self) -> List[PaneProps]:
+        if "FINGERS_TARGET_WINDOW" in os.environ:
+            return self._get_panes_props(f'-t {os.environ["FINGERS_TARGET_WINDOW"]}')
         return self._get_panes_props('-t !')
 
     # TODO: there is too much logic here: extract into some testable code

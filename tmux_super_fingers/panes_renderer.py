@@ -2,6 +2,7 @@ from typing import List, Optional, Generator
 from copy import deepcopy
 from curses import ascii
 
+from .cli_adapter import CliAdapter
 from .pane import Pane
 from .mark import Highlight, Mark
 from .ui import UI
@@ -20,8 +21,9 @@ class PanesRenderer:
         self.panes = panes
         self.secondary_mode = False
 
-    def loop(self) -> None:
+    def loop(self, cli_adapter: CliAdapter | None = None) -> None:
         user_input = ''
+        ready = False
 
         while True:
             panes = _discard_marks_that_dont_match_user_input(deepcopy(self.panes), user_input)
@@ -40,6 +42,10 @@ class PanesRenderer:
             for pane in panes:
                 self._render_pane_text(pane)
                 self._overlay_marks(pane, user_input)
+
+            if cli_adapter and not ready:
+                cli_adapter.select_tmux_window('super-fingers')
+                ready = True
 
             try:
                 user_input = self._handle_user_input(user_input)
