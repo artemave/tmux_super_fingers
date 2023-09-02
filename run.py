@@ -12,7 +12,7 @@ from tmux_super_fingers import eval_file
 
 
 def main(stdscr: window) -> None:
-    if "FINGERS_EXTEND" in os.environ:
+    if "FINGERS_EXTEND" in os.environ and os.environ["FINGERS_EXTEND"] != "":
         eval_file(os.environ["FINGERS_EXTEND"])
 
     ui = CursesUI(stdscr)
