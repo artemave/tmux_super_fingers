@@ -43,6 +43,7 @@ Requires Python >= 3.9.
 
 ### Using [TPM](https://github.com/tmux-plugins/tpm):
 
+    set -ga update-environment EDITOR
     set -g @plugin 'artemave/tmux_super_fingers'
 
 Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin.
@@ -128,15 +129,6 @@ Run checks and tests:
 ```
 make
 ```
-
-## Gotchas
-
-The plugin relies on `EDITOR` variable being set. However, it has been observed that under some circumstances (I can't figure out what they are) tmux does not inherit environment when it starts and so the plugin code runs, `EDITOR` is missing and nothing works.
-Running `tmux set-environment -g EDITOR $EDITOR` later fixes it, but I can't figure out how to automate this.
-
-One (untested) workaround could be to alias tmux like this:
-
-    alias tmux="tmux && tmux set-environment -g EDITOR $EDITOR"
 
 ## TODO
 
