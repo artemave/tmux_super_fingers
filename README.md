@@ -56,6 +56,7 @@ Clone the repo:
 
 Source it in your `.tmux.conf`:
 
+    set -ga update-environment EDITOR
     run-shell ~/.tmux/plugins/tmux_super_fingers/tmux_super_fingers.tmux
 
 Reload TMUX conf by running:
