@@ -55,6 +55,9 @@ class MockCliAdapterBase(CliAdapter):  # pragma: no cover
     def select_tmux_window(self, id: str) -> None:
         self.calls.append(['select_tmux_window', id])
 
+    def select_tmux_pane(self, id: str) -> None:
+        self.calls.append(['select_tmux_pane', id])
+
     def new_tmux_window(self, name: str, command: str) -> None:
         self.calls.append(['new_tmux_window', name, command])
 

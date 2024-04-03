@@ -21,6 +21,10 @@ class CliAdapter(metaclass=ABCMeta):  # pragma: no cover
         ...
 
     @abstractmethod
+    def select_tmux_pane(self, id: str) -> None:
+        ...
+
+    @abstractmethod
     def tmux_send_keys(self, id: str, keys: str) -> None:
         ...
 
@@ -82,6 +86,9 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
 
     def select_tmux_window(self, id: str) -> None:
         os.system(f'tmux select-window -t {id}')
+
+    def select_tmux_pane(self, id: str) -> None:
+        os.system(f'tmux select-pane -t {id}')
 
     def tmux_send_keys(self, id: str, keys: str) -> None:
         os.system(f'tmux send-keys -t {id} {keys}')

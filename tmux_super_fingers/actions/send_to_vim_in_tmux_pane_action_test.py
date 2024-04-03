@@ -43,5 +43,6 @@ def test_sends_keys_to_existing_window_running_vim(monkeypatch: MonkeyPatch):
 
     assert cli_adapter.calls == [
         ['select_tmux_window', '2'],
-        ['tmux_send_keys', '2', 'Escape ":e +2 /tmp/file.txt" Enter zz']
+        ['tmux_send_keys', '2', 'Escape ":e +2 /tmp/file.txt" Enter zz'],
+        ['select_tmux_pane', '2']
     ]
