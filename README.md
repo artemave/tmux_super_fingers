@@ -114,6 +114,18 @@ Now let's plug it in:
 set -g @super-fingers-extend /path/to/the/above/code.py
 ```
 
+## Troubleshooting
+
+Check `/tmp/tmux_super_fingers_error.txt` for errors:
+```
+tail -F /tmp/tmux_super_fingers_error.txt
+```
+
+### Text files are not opened in vim/nvim but in a different editor
+
+Please make sure your `EDITOR` env is set, and it's exclusively is set to `vim` or `nvim` (i.e. `EDITOR=/my/custom/path/nvim` will not work) 
+
+
 ## Development
 
 Prerequisites: python3, pipenv, node, make
