@@ -195,4 +195,3 @@ def test_with_parentheses_brackets_and_line_number(change_test_dir: str):
         )
     ]
     assert_marks(pane, expected_marks)
-
