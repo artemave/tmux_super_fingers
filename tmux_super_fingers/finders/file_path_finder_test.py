@@ -140,3 +140,61 @@ def test_finds_directories(change_test_dir: str):
         )
     ]
     assert pane.marks == expected_marks
+
+
+def test_finds_file_with_parentheses_in_path(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+        'unwrapped_text': 'Path in ./app/(main)/controllers/index.tsx',
+        'current_path': cwd
+    }
+    expected_marks = [
+        Mark(
+            start=8,
+            text='./app/(main)/controllers/index.tsx',
+            target=FileTarget(
+                file_path=f'{cwd}/app/(main)/controllers/index.tsx',
+                content_type=ContentType.TEXT
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/controllers/index.tsx')
+
+
+def test_finds_file_with_square_brackets_in_path(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+        'unwrapped_text': 'Path in ./app/[id]/controllers/index.tsx',
+        'current_path': cwd
+    }
+    expected_marks = [
+        Mark(
+            start=8,
+            text='./app/[id]/controllers/index.tsx',
+            target=FileTarget(
+                file_path=f'{cwd}/app/[id]/controllers/index.tsx',
+                content_type=ContentType.TEXT
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/[id]/controllers/index.tsx')
+
+
+def test_with_parentheses_brackets_and_line_number(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+        'unwrapped_text': 'Error in ./app/(main)/[id]/index.tsx:45',
+        'current_path': cwd
+    }
+    expected_marks = [
+        Mark(
+            start=9,
+            text='./app/(main)/[id]/index.tsx:45',
+            target=FileTarget(
+                file_path=f'{cwd}/app/(main)/[id]/index.tsx',
+                content_type=ContentType.TEXT,
+                line_number=45
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
