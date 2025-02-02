@@ -59,11 +59,16 @@ class CursesUI(UI):  # pragma: no cover
     # Workaround for:
     # https://stackoverflow.com/questions/7063128/last-character-of-a-window-in-python-curses
     def render_line(self, y: int, x: int, line: str, color: int) -> None:
+        if len(line) == 0:
+            return
         try:
             self.window.addstr(y, x, line, color)
         except curses.error:
-            self.window.addstr(y, x, line[-1], color)
-            self.window.insstr(y, x, line[:-1], color)
+            try:
+                self.window.addstr(y, x, line[-1], color)
+                self.window.insstr(y, x, line[:-1], color)
+            except curses.error:
+                pass
 
         # Refreshing after each render does not seem to affect performance
         self.window.refresh()
