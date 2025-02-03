@@ -9,6 +9,7 @@ from .pane_props import PaneProps
 from .utils import shell, strip
 
 is_macos = 'darwin' in sys.platform.lower()
+is_wayland = 'XDG_SESSION_TYPE' in os.environ and os.environ['XDG_SESSION_TYPE'].lower() == 'wayland'
 
 
 class CliAdapter(metaclass=ABCMeta):  # pragma: no cover
@@ -115,7 +116,7 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
         )
 
     def copy_to_clipboard(self, text: str) -> None:
-        os_copy_to_clipboard = 'pbcopy' if is_macos else 'xclip'
+        os_copy_to_clipboard = 'pbcopy' if is_macos else 'wl-copy' if is_wayland else 'xclip'
         subprocess.run(os_copy_to_clipboard, shell=True, check=True, text=True, input=text)
 
     def get_file_type(self, path: str) -> str:
