@@ -47,6 +47,25 @@ def test_finds_relative_file_with_line_number(change_test_dir: str):
     assert_marks(pane, expected_marks)
 
 
+def test_finds_relative_file_with_line_number_wrapped_in_squares(change_test_dir: str):
+    pane = {
+        'unwrapped_text': 'Stuff in [app/controllers/orders_controller.rb:32]',
+        'current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=10,
+            text='app/controllers/orders_controller.rb:32',
+            target=FileTarget(
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                content_type=ContentType.TEXT,
+                line_number=32
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks)
+
+
 def test_finds_relative_file_with_line_number_python(change_test_dir: str):
     pane = {
         'unwrapped_text': 'File "./app/controllers/orders_controller.rb", line 32, in <module>',
