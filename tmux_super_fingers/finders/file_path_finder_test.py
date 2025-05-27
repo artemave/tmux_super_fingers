@@ -217,3 +217,53 @@ def test_with_parentheses_brackets_and_line_number(change_test_dir: str):
         )
     ]
     assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
+
+
+def test_does_not_pick_up_only_dot(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+        'unwrapped_text': 'Error in . sdf',
+        'current_path': cwd
+    }
+    expected_marks = []
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
+
+
+def test_does_not_pick_up_only_dots(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+        'unwrapped_text': 'Error in .. sdf',
+        'current_path': cwd
+    }
+    expected_marks = []
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
+
+
+def test_does_not_pick_up_only_dot_slash(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+            'unwrapped_text': 'Error in ./ sdf',
+            'current_path': cwd
+            }
+    expected_marks = []
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
+
+
+def test_does_not_pick_up_only_dot_dot_slash(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+            'unwrapped_text': 'Error in ../ sdf',
+            'current_path': cwd
+            }
+    expected_marks = []
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
+
+
+def test_does_not_pick_up_only_slash(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+            'unwrapped_text': 'Error in / sdf',
+            'current_path': cwd
+            }
+    expected_marks = []
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')

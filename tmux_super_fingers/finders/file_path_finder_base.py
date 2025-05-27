@@ -14,6 +14,9 @@ class FilePathFinderBase():
         file_path: str,
         line_number: Optional[str]
     ) -> Optional[Mark]:
+        if file_path in ('.', '..', './', '../', '/'):
+            return None
+
         file_path = path.abspath(
             path.join(path_prefix, path.expanduser(file_path))
         )
