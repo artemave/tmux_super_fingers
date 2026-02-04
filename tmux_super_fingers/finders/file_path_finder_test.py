@@ -1,5 +1,6 @@
 import os
 from shutil import copy
+from typing import List
 from ..mark import Mark
 from ..targets.file_target import FileTarget, ContentType
 from ..test_utils import assert_marks, create_pane
@@ -225,7 +226,7 @@ def test_does_not_pick_up_only_dot(change_test_dir: str):
         'unwrapped_text': 'Error in . sdf',
         'current_path': cwd
     }
-    expected_marks = []
+    expected_marks: List[Mark] = []
     assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
 
 
@@ -235,7 +236,7 @@ def test_does_not_pick_up_only_dots(change_test_dir: str):
         'unwrapped_text': 'Error in .. sdf',
         'current_path': cwd
     }
-    expected_marks = []
+    expected_marks: List[Mark] = []
     assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
 
 
@@ -245,7 +246,7 @@ def test_does_not_pick_up_only_dot_slash(change_test_dir: str):
             'unwrapped_text': 'Error in ./ sdf',
             'current_path': cwd
             }
-    expected_marks = []
+    expected_marks: List[Mark] = []
     assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
 
 
@@ -255,7 +256,7 @@ def test_does_not_pick_up_only_dot_dot_slash(change_test_dir: str):
             'unwrapped_text': 'Error in ../ sdf',
             'current_path': cwd
             }
-    expected_marks = []
+    expected_marks: List[Mark] = []
     assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
 
 
@@ -265,5 +266,5 @@ def test_does_not_pick_up_only_slash(change_test_dir: str):
             'unwrapped_text': 'Error in / sdf',
             'current_path': cwd
             }
-    expected_marks = []
+    expected_marks: List[Mark] = []
     assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
