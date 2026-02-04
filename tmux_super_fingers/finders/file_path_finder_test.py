@@ -220,6 +220,25 @@ def test_with_parentheses_brackets_and_line_number(change_test_dir: str):
     assert_marks(pane, expected_marks, file_path=f'{cwd}/app/(main)/[id]/index.tsx')
 
 
+def test_finds_file_with_dollar_sign_in_path(change_test_dir: str):
+    cwd = os.getcwd()
+    pane = {
+        'unwrapped_text': 'Error in app/routes/posts/$postId.tsx',
+        'current_path': cwd
+    }
+    expected_marks = [
+        Mark(
+            start=9,
+            text='app/routes/posts/$postId.tsx',
+            target=FileTarget(
+                file_path=f'{cwd}/app/routes/posts/$postId.tsx',
+                content_type=ContentType.TEXT
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks, file_path=f'{cwd}/app/routes/posts/$postId.tsx')
+
+
 def test_does_not_pick_up_only_dot(change_test_dir: str):
     cwd = os.getcwd()
     pane = {

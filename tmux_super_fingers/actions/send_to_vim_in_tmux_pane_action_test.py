@@ -46,3 +46,35 @@ def test_sends_keys_to_existing_window_running_vim(monkeypatch: MonkeyPatch):
         ['tmux_send_keys', '2', 'Escape ":e +2 /tmp/file.txt" Enter zz'],
         ['select_tmux_pane', '2']
     ]
+
+
+def test_escapes_dollar_sign_in_new_window(monkeypatch: MonkeyPatch):
+    monkeypatch.setenv('EDITOR', 'vim')
+    monkeypatch.setenv('SHELL', '/bin/zsh')
+
+    target_payload = FileTargetPayload(file_path='/tmp/routes/$postId.tsx')
+    cli_adapter = MockTmuxAdapter()
+
+    action = SendToVimInTmuxPaneAction(target_payload, cli_adapter)
+    action.perform()
+
+    assert cli_adapter.calls == [
+        ['new_tmux_window', 'vim', " 'vim /tmp/routes/\\$postId.tsx; /bin/zsh -i'"]
+    ]
+
+
+def test_escapes_dollar_sign_in_existing_vim(monkeypatch: MonkeyPatch):
+    monkeypatch.setenv('EDITOR', 'vim')
+    monkeypatch.setenv('SHELL', '/bin/zsh')
+
+    target_payload = FileTargetPayload(file_path='/tmp/routes/$postId.tsx', line_number=5)
+    cli_adapter = MockTmuxAdapter({'vim': create_pane_props({'pane_id': '2'})})
+
+    action = SendToVimInTmuxPaneAction(target_payload, cli_adapter)
+    action.perform()
+
+    assert cli_adapter.calls == [
+        ['select_tmux_window', '2'],
+        ['tmux_send_keys', '2', 'Escape ":e +5 /tmp/routes/\\$postId.tsx" Enter zz'],
+        ['select_tmux_pane', '2']
+    ]

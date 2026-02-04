@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import shlex
 import sys
 from typing import Optional, List
 import re
@@ -92,10 +93,10 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
         os.system(f'tmux select-pane -t {id}')
 
     def tmux_send_keys(self, id: str, keys: str) -> None:
-        os.system(f'tmux send-keys -t {id} {keys}')
+        subprocess.run(['tmux', 'send-keys', '-t', id] + shlex.split(keys))
 
     def new_tmux_window(self, name: str, command: str) -> None:
-        os.system(f'tmux new-window -n {name} {command}')
+        subprocess.run(['tmux', 'new-window', '-n', name] + shlex.split(command))
 
     def capture_tmux_viewport(self, pane_id: str, start: int, end: int, unwrapped: bool = False) -> str:
         wrap_flag = '-J' if unwrapped else ''

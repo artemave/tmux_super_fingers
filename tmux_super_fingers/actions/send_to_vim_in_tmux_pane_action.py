@@ -30,7 +30,9 @@ class SendToVimInTmuxPaneAction(Action):
             )
 
     def _vim_e_args(self) -> str:
-        if self.target_payload.line_number:
-            return f'+{self.target_payload.line_number} {self.target_payload.file_path}'
+        escaped_path = self.target_payload.file_path.replace('$', '\\$')
 
-        return f'{self.target_payload.file_path}'
+        if self.target_payload.line_number:
+            return f'+{self.target_payload.line_number} {escaped_path}'
+
+        return escaped_path
