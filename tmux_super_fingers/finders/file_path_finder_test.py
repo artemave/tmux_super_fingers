@@ -239,6 +239,61 @@ def test_finds_file_with_dollar_sign_in_path(change_test_dir: str):
     assert_marks(pane, expected_marks, file_path=f'{cwd}/app/routes/posts/$postId.tsx')
 
 
+def test_finds_file_wrapped_in_parens(change_test_dir: str):
+    pane = {
+        'unwrapped_text': 'Stuff (app/controllers/orders_controller.rb) rail',
+        'current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=7,
+            text='app/controllers/orders_controller.rb',
+            target=FileTarget(
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                content_type=ContentType.TEXT
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks)
+
+
+def test_finds_file_wrapped_in_tool_call_parens(change_test_dir: str):
+    pane = {
+        'unwrapped_text': 'Update(app/controllers/orders_controller.rb)',
+        'current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=7,
+            text='app/controllers/orders_controller.rb',
+            target=FileTarget(
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                content_type=ContentType.TEXT
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks)
+
+
+def test_finds_file_wrapped_in_tool_call_parens_with_line_number(change_test_dir: str):
+    pane = {
+        'unwrapped_text': 'Update(app/controllers/orders_controller.rb:42)',
+        'current_path': os.getcwd()
+    }
+    expected_marks = [
+        Mark(
+            start=7,
+            text='app/controllers/orders_controller.rb:42',
+            target=FileTarget(
+                file_path=os.getcwd() + '/app/controllers/orders_controller.rb',
+                content_type=ContentType.TEXT,
+                line_number=42
+            )
+        )
+    ]
+    assert_marks(pane, expected_marks)
+
+
 def test_does_not_pick_up_only_dot(change_test_dir: str):
     cwd = os.getcwd()
     pane = {

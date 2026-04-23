@@ -12,14 +12,18 @@ class FilePathFinder(BaseFinder, FilePathFinderBase):
     @classmethod
     def pattern(cls) -> Pattern[str]:
         return re.compile(
-            r'([~./]?[-a-zA-Z0-9_./][-a-zA-Z0-9_+-,./@()\[\]$]*)(?:(?::|", line )(\d+))?'
+            r'(?:\w+\()?'
+            r'(([~./]?[-a-zA-Z0-9_./]'
+            r'[-a-zA-Z0-9_+-,./@\[\]$]*'
+            r'(?:\([-a-zA-Z0-9_+-,./@\[\]$]*\)[-a-zA-Z0-9_+-,./@\[\]$]*)*)'
+            r'(?:(?::|", line )(\d+))?)\)?'
         )
 
     def match_to_mark(self, match: Match[str]) -> Optional[Mark]:
-        start = match.span()[0]
-        text = match.group(0)
-        file_path = match.group(1)
-        line_number = match.group(2)
+        start = match.span(1)[0]
+        text = match.group(1)
+        file_path = match.group(2)
+        line_number = match.group(3)
 
         return self._match_to_mark(
             self.path_prefix,
