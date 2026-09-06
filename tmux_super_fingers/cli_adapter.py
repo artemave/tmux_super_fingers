@@ -105,8 +105,15 @@ class RealCliAdapter(CliAdapter):  # pragma: no cover
         )
 
     def get_tmux_pane_cwd(self, pane_tty: str) -> str:
-        pane_shell_pid = shell(f'ps -o pid= -t {pane_tty}').split("\n")[0].strip()
-        return shell(f'lsof -a -p {pane_shell_pid} -d cwd -Fn').split('\n')[-1][1:]
+        # Ask tmux directly rather than deriving the shell pid from the tty: `ps -o pid= -t <tty>`
+        # is sorted by pid, so a zombie left behind by the shell can come first, and `lsof` exits
+        # non-zero on a zombie (it has no cwd), which blows up `shell`'s check=True.
+        panes = shell('tmux list-panes -a -F #{pane_tty}\t#{pane_current_path}').split('\n')
+        for line in panes:
+            tty, _, cwd = line.partition('\t')
+            if tty == pane_tty:
+                return cwd
+        return ''
 
     def os_open(self, file_or_url: str) -> None:
         os_open = 'open' if is_macos else 'xdg-open'
